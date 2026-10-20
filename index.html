@@ -1,607 +1,722 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230866FF%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-family=%27Arial%27 font-weight=%27700%27 font-size=%2715%27 fill=%27white%27 text-anchor=%27middle%27%3ERZ%3C/text%3E%3C/svg%3E"><meta property="og:title" content="Rizwan Zafar — DevOps &amp; Platform Engineer"><meta property="og:description" content="Kubernetes, GitOps, CI/CD and observability for systems that fail small and recover fast."><meta property="og:type" content="website"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Rizwan Zafar — DevOps & Platform Engineer. Kubernetes, GitOps, CI/CD and observability for systems that fail small and recover fast."><style>[hidden]{display:none!important}</style>
-<title>Rizwan Zafar</title>
-
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rizwan Zafar · DevOps &amp; Platform Engineer</title>
+<meta name="description" content="Rizwan Zafar, DevOps & Platform Engineer. Kubernetes, GitOps, CI/CD and observability for teams that want calm production and boring releases.">
+<meta property="og:title" content="Rizwan Zafar · DevOps & Platform Engineer">
+<meta property="og:description" content="I keep production calm so teams can keep shipping. Kubernetes, GitOps, CI/CD, observability.">
+<meta property="og:image" content="https://github.com/rizwan441.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#3F8A73">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%233F8A73'/%3E%3Ctext x='16' y='21.5' font-family='Arial' font-weight='800' font-size='14' fill='white' text-anchor='middle'%3Erz%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@600&display=swap">
 <style>
-/* Layout: one calm reading column (≈720px) that widens only for the work section and the architecture diagram. Serif for authority, sans for clarity, mono for evidence. One accent, used only where action or proof lives. */
 :root{
-  --bg:#F0F2F5; --surface:#FFFFFF; --sunk:#F0F2F5; --ink:#1C1E21; --ink2:#3E4249; --muted:#65676B; --line:#DADDE1; --line2:#C5C9CF;
-  --accent:#0866FF; --accent-ink:#FFFFFF; --accent-soft:#E7F0FF; --ok:#1B8A4B; --ok-soft:#E1F4E8; --warn:#B25E00; --warn-soft:#FDEEDC; --bad:#D9283A; --bad-soft:#FDE7EA;
-  --f-serif:"Geist",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --f-sans:"Geist",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --f-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --green:#3F8A73; --green-d:#2F6F5C; --green-dd:#1F4D40; --mint:#EAF4F0; --mint2:#D6EBE3;
+  --yellow:#F6C343; --yellow-soft:#FFF4D6;
+  --ink:#121519; --ink2:#3B4248; --muted:#6C757D; --line:#E4E9E7; --bg:#FFFFFF; --soft:#F7FAF9;
+  --night:#121519; --night2:#1B2025; --night3:#262C33; --nline:#2F363E; --nmuted:#9AA5AE;
+  --red:#E5484D;
+  --f:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --hand:"Caveat","Segoe Script",cursive;
+  --pad:clamp(20px,4vw,64px);
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#18191A; --surface:#242526; --sunk:#3A3B3C; --ink:#E4E6EB; --ink2:#C9CCD1; --muted:#B0B3B8; --line:#3A3B3C; --line2:#4E4F50;
-  --accent:#2D88FF; --accent-ink:#FFFFFF; --accent-soft:#1E2F4A; --ok:#45BD62; --ok-soft:#173022; --warn:#F2A33A; --warn-soft:#33260F; --bad:#F35369; --bad-soft:#3A1A20; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#18191A; --surface:#242526; --sunk:#3A3B3C; --ink:#E4E6EB; --ink2:#C9CCD1; --muted:#B0B3B8; --line:#3A3B3C; --line2:#4E4F50;
-  --accent:#2D88FF; --accent-ink:#FFFFFF; --accent-soft:#1E2F4A; --ok:#45BD62; --ok-soft:#173022; --warn:#F2A33A; --warn-soft:#33260F; --bad:#F35369; --bad-soft:#3A1A20; color-scheme:dark}
-
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:80px}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bg)}
-a{color:inherit;text-decoration-color:var(--line2);text-underline-offset:4px;text-decoration-thickness:1px;transition:text-decoration-color .2s,color .2s}
-a:hover{text-decoration-color:currentColor}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
-::selection{background:var(--accent-soft);color:var(--ink)}
-h1,h2,h3{margin:0;text-wrap:balance;font-weight:500}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{margin:0;line-height:1.1;letter-spacing:-.025em;text-wrap:balance}
 p{margin:0}
-.wrap{max-width:1080px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
-.col{max-width:720px}
-.label{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.mono{font-family:var(--f-mono)}
+:focus-visible{outline:2px solid var(--yellow);outline-offset:3px;border-radius:6px}
+::selection{background:var(--yellow);color:var(--ink)}
+.wrap{max-width:1600px;margin:0 auto;padding-left:max(var(--pad),env(safe-area-inset-left));padding-right:max(var(--pad),env(safe-area-inset-right))}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+.eyebrow::before{content:"";width:22px;height:2px;background:currentColor;border-radius:2px}
+.mono{font-family:var(--mono)}
+.mark{background:linear-gradient(transparent 58%,var(--yellow) 58%,var(--yellow) 90%,transparent 90%);padding:0 .08em}
 
-header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:saturate(160%) blur(12px);-webkit-backdrop-filter:saturate(160%) blur(12px);border-bottom:1px solid transparent;transition:border-color .2s}
-header.top.scrolled{border-bottom-color:var(--line)}
-header.top .wrap{display:flex;align-items:center;gap:24px;padding-block:16px}
-.name{font-weight:600;font-size:15px;text-decoration:none;letter-spacing:-.01em;margin-right:auto}
-.name span{color:var(--muted);font-weight:400}
-nav.links{display:flex;gap:26px}
-nav.links a{font-size:14px;color:var(--ink2);text-decoration:none}
-nav.links a:hover{color:var(--ink)}
-.tools{display:flex;gap:8px}
-.kbtn,.tbtn{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink2);font:inherit;font-size:13px;cursor:pointer}
-.kbtn:hover,.tbtn:hover{border-color:var(--line2);color:var(--ink)}
-.kbtn kbd{font-family:var(--f-mono);font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px;background:var(--sunk)}
-.tbtn{width:34px;justify-content:center;padding:0}
-.tbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6}
-@media (max-width:760px){nav.links{display:none}.kbtn .t{display:none}.name span{display:none}}
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);border-bottom:1px solid transparent;transition:border-color .25s,box-shadow .25s}
+.nav.scrolled{border-bottom-color:var(--line);box-shadow:0 6px 24px -18px rgba(18,21,25,.35)}
+.nav .wrap{display:flex;align-items:center;gap:28px;height:74px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:800;font-size:17px;letter-spacing:-.02em;margin-right:auto}
+.logo b{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:var(--green);color:#fff;font-size:15px;font-weight:800}
+.nav nav{display:flex;gap:30px}
+.nav nav a{text-decoration:none;font-weight:600;font-size:15px;color:var(--ink2);transition:color .2s}
+.nav nav a:hover{color:var(--green)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;padding:0 24px;border-radius:12px;font-family:var(--f);font-weight:700;font-size:15.5px;text-decoration:none;border:0;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
+.btn-green{background:var(--green);color:#fff;box-shadow:0 12px 28px -14px var(--green)}
+.btn-green:hover{background:var(--green-d);transform:translateY(-2px)}
+.btn-yellow{background:var(--yellow);color:var(--ink);box-shadow:0 12px 28px -14px #c99a1f}
+.btn-yellow:hover{transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn-ghost:hover{background:var(--ink);color:#fff}
+.btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+.nav .btn{height:44px;padding:0 18px;font-size:14.5px}
+@media (max-width:980px){.nav nav{display:none}}
 
-.hero{padding-block:96px 72px}
-.avail{display:inline-flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink2);padding:6px 14px 6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
-.avail i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
-.hero h1{font-family:var(--f-serif);font-weight:650;font-size:clamp(40px,6.2vw,68px);line-height:1.04;letter-spacing:-.035em;margin-top:28px;max-width:18ch}
-.hero h1 em{font-style:normal;color:var(--accent)}
-.hero .sub{margin-top:26px;font-size:19px;line-height:1.55;color:var(--ink2);max-width:60ch}
-.hero .sub strong{color:var(--ink);font-weight:500}
-.cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:36px}
-.btn{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 20px;border-radius:10px;background:var(--accent);color:var(--accent-ink);font-weight:500;font-size:15px;text-decoration:none;border:0;cursor:pointer;transition:transform .15s;box-shadow:0 8px 24px -12px var(--accent)}
-.btn:hover{transform:translateY(-1px)}
-.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
-.tlink{font-size:15px;font-weight:500;color:var(--ink);text-decoration:none;display:inline-flex;gap:6px;align-items:center}
-.tlink span{transition:transform .2s}
-.tlink:hover span{transform:translateX(3px)}
-.meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:40px;font-size:14px;color:var(--muted)}
-.meta span{display:inline-flex;align-items:center;gap:8px}
-.meta svg{flex:none;width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6}
+/* hero */
+.hero{position:relative;overflow:hidden;background:radial-gradient(1200px 600px at 85% 10%,var(--mint) 0%,transparent 60%),radial-gradient(800px 500px at 0% 100%,#F3FAF7 0%,transparent 70%),var(--bg)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:center;padding-top:clamp(48px,7vw,96px);padding-bottom:clamp(64px,8vw,112px)}
+@media (max-width:1060px){.hero .wrap{grid-template-columns:minmax(0,1fr)}}
+.status{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:14px;font-weight:600;color:var(--ink2);box-shadow:0 6px 20px -14px rgba(18,21,25,.3)}
+.status i{width:9px;height:9px;border-radius:50%;background:#22C55E;box-shadow:0 0 0 0 rgba(34,197,94,.5);animation:ping 2.4s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}70%{box-shadow:0 0 0 10px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+.hero h1{font-size:clamp(42px,5.6vw,80px);font-weight:800;letter-spacing:-.04em;line-height:1.02;margin-top:26px}
+.hero h1 .g{color:var(--green)}
+.hero .lede{margin-top:24px;font-size:clamp(17px,1.4vw,20px);color:var(--ink2);max-width:58ch;line-height:1.6}
+.hero .lede b{color:var(--ink);font-weight:700}
+.hero .cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.trust{display:flex;align-items:center;gap:16px;margin-top:40px;flex-wrap:wrap}
+.trust img{width:54px;height:54px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 8px 20px -10px rgba(18,21,25,.45);background:var(--mint)}
+.trust .t1{font-weight:700;font-size:15px}
+.trust .t2{font-size:14px;color:var(--muted)}
+.trust .sep{width:1px;height:38px;background:var(--line)}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badges span{font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:8px;background:#fff;border:1px solid var(--line);color:var(--ink2)}
 
-.proof{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:14px;padding-inline:24px}
-.proof div{padding:28px 24px 26px 0}
-.proof div+div{padding-left:24px;border-left:1px solid var(--line)}
-.proof b{display:block;font-family:var(--f-serif);font-weight:650;font-size:clamp(34px,4vw,46px);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums lining-nums}
-.proof span{display:block;margin-top:10px;font-size:14px;color:var(--muted);line-height:1.45}
-@media (max-width:760px){.proof{grid-template-columns:repeat(2,minmax(0,1fr))}.proof div:nth-child(3){padding-left:0;border-left:0}.proof div:nth-child(n+3){border-top:1px solid var(--line)}}
-.orgs{display:flex;flex-wrap:wrap;align-items:center;gap:10px 30px;padding-block:22px;color:var(--muted);font-size:14px}
-.orgs b{font-weight:500;color:var(--ink2)}
+/* terminal */
+.stage{position:relative;min-width:0}
+.term{position:relative;z-index:2;background:var(--night);border-radius:18px;box-shadow:0 50px 100px -40px rgba(18,21,25,.55),0 0 0 1px rgba(255,255,255,.04) inset;overflow:hidden;transform:rotate(-1deg)}
+.term-top{display:flex;align-items:center;gap:8px;padding:14px 18px;background:var(--night2);border-bottom:1px solid var(--nline)}
+.term-top i{width:12px;height:12px;border-radius:50%;display:block}
+.term-top i:nth-child(1){background:#FF5F57}.term-top i:nth-child(2){background:#FEBC2E}.term-top i:nth-child(3){background:#28C840}
+.term-top span{flex:1;text-align:center;font-family:var(--mono);font-size:12.5px;color:var(--nmuted);margin-right:52px}
+.term-body{font-family:var(--mono);font-size:13.5px;line-height:1.75;color:#D7DEE4;padding:18px 22px 22px;height:390px;overflow:hidden;white-space:pre-wrap;word-break:break-word}
+.term-body .p{color:#7FD1B0}.term-body .h{color:var(--yellow)}.term-body .d{color:#7C8792}.term-body .ok{color:#4ADE80}.term-body .w{color:#FBBF24}.term-body .b{color:#93C5FD}
+.cursor{display:inline-block;width:8px;height:16px;background:var(--yellow);vertical-align:-3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.float{position:absolute;z-index:3;background:#fff;border-radius:14px;padding:12px 16px;box-shadow:0 24px 50px -24px rgba(18,21,25,.45);border:1px solid var(--line);display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600;animation:bob 6s ease-in-out infinite}
+.float small{display:block;font-size:12px;font-weight:500;color:var(--muted)}
+.float .ic{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--mint);color:var(--green);font-weight:800;font-family:var(--mono);font-size:13px}
+.float .ic.y{background:var(--yellow-soft);color:#9A6B00}
+.f1{left:-28px;bottom:-26px;animation-delay:-2s}
+.f2{right:-18px;top:-24px}
+.f3{right:24px;bottom:-34px;animation-delay:-4s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@media (max-width:1060px){.f1{left:8px}.f2{right:8px}}
+@media (max-width:560px){.f3{display:none}.term-body{height:340px;font-size:12px}}
 
-section{padding-block:104px 24px}
-.shead{display:grid;gap:12px;margin-bottom:48px}
-.shead h2{font-family:var(--f-serif);font-weight:650;font-size:clamp(32px,4.2vw,44px);line-height:1.1;letter-spacing:-.018em}
-.shead p{color:var(--ink2);max-width:62ch;font-size:17px}
+/* strip */
+.strip{background:var(--ink);color:#fff;overflow:hidden;padding:18px 0}
+.track{display:flex;gap:44px;width:max-content;animation:mq 45s linear infinite}
+.strip:hover .track{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-50%)}}
+.track span{font-family:var(--mono);font-size:15px;color:#C9D2D9;white-space:nowrap;display:inline-flex;align-items:center;gap:44px}
+.track span::after{content:"/";color:var(--yellow)}
 
-.case{display:grid;grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:56px;padding:40px;margin-bottom:20px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
-@media (max-width:600px){.case{padding:24px}}
-@media (max-width:880px){.case{grid-template-columns:minmax(0,1fr);gap:24px}}
-.case aside{display:grid;gap:14px;align-content:start}
-.case .num{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
-.case h3{font-family:var(--f-serif);font-weight:650;font-size:30px;line-height:1.12;letter-spacing:-.015em}
-.case .role{font-size:14px;color:var(--muted)}
-.case .result{margin-top:6px;padding:16px 18px;border-radius:12px;background:var(--accent-soft)}
-.case .result b{display:block;font-family:var(--f-serif);font-weight:650;font-size:32px;line-height:1.05;color:var(--accent);letter-spacing:-.02em;font-variant-numeric:tabular-nums lining-nums}
-.case .result span{display:block;margin-top:6px;font-size:13.5px;color:var(--ink2)}
-.case dl{margin:0;display:grid;gap:22px}
-.case dt{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.case dd{margin:6px 0 0;color:var(--ink2);max-width:62ch}
-.case dd strong{color:var(--ink);font-weight:500}
-code{font-family:var(--f-mono);font-size:.86em;background:var(--sunk);border:1px solid var(--line);padding:1px 6px;border-radius:5px;color:var(--ink)}
-.stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
-.stack span{font-family:var(--f-mono);font-size:12px;color:var(--ink2);padding:3px 9px;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;padding-block:clamp(56px,7vw,96px)}
+@media (max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{padding:28px;border-radius:20px;background:var(--soft);border:1px solid var(--line);transition:transform .3s,box-shadow .3s}
+.stat:hover{transform:translateY(-4px);box-shadow:0 24px 40px -28px rgba(18,21,25,.35)}
+.stat b{display:block;font-size:clamp(40px,4.4vw,60px);font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--green);font-variant-numeric:tabular-nums}
+.stat span{display:block;margin-top:12px;font-size:15px;color:var(--ink2);line-height:1.45}
 
-.diagram{margin-top:28px;border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:18px 18px 14px;overflow-x:auto}
-.diagram svg{display:block;width:100%;min-width:560px;height:auto}
-.diagram .cap{font-size:12.5px;color:var(--muted);margin-top:8px}
-.dg-box{fill:var(--surface);stroke:var(--line2);stroke-width:1.2}
-.dg-box.hot{fill:var(--accent-soft);stroke:var(--accent)}
-.dg-t{fill:var(--ink);font-family:var(--f-sans);font-size:13px;font-weight:500}
-.dg-s{fill:var(--muted);font-family:var(--f-mono);font-size:10.5px}
-.dg-l{stroke:var(--line2);stroke-width:1.3;fill:none}
-.dg-l.hot{stroke:var(--accent);stroke-dasharray:4 4;animation:flow 1.2s linear infinite}
-.dg-a{fill:var(--line2)}.dg-a.hot{fill:var(--accent)}
-@keyframes flow{to{stroke-dashoffset:-16}}
+section{padding-block:clamp(72px,9vw,128px)}
+.sh{display:grid;gap:16px;margin-bottom:clamp(36px,5vw,64px);max-width:860px}
+.sh h2{font-size:clamp(34px,4.2vw,58px);font-weight:800;letter-spacing:-.035em}
+.sh p{font-size:clamp(16.5px,1.3vw,19px);color:var(--ink2);max-width:64ch}
+.sh.duo{max-width:none;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);align-items:end;gap:24px 64px}
+@media (max-width:900px){.sh.duo{grid-template-columns:minmax(0,1fr)}}
 
-.more{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px 32px 12px}
-.more .item:last-child{border-bottom:0}
-@media (max-width:600px){.more{padding:4px 20px 8px}}
-.more h3{margin:28px 0 8px}
-.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 24px;padding:20px 0;border-bottom:1px solid var(--line);align-items:baseline}
-.item .t{font-weight:500;font-size:16.5px}
-.item .d{grid-column:1/-1;color:var(--ink2);font-size:15px;max-width:72ch}
-.item .s{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap}
-@media (max-width:560px){.item{grid-template-columns:1fr}.item .s{white-space:normal}}
-.pill{display:inline-block;margin-left:10px;font-family:var(--f-mono);font-size:11px;padding:1px 8px;border-radius:999px;vertical-align:2px;font-weight:400}
-.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.wip{background:var(--warn-soft);color:var(--warn)}.pill.oss{background:var(--accent-soft);color:var(--accent)}
+/* about */
+.about{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(32px,5vw,80px);align-items:center}
+@media (max-width:980px){.about{grid-template-columns:minmax(0,1fr)}}
+.neo{background:var(--night);border-radius:20px;padding:26px 28px;font-family:var(--mono);font-size:13.5px;line-height:1.7;color:#D7DEE4;display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;box-shadow:0 40px 80px -40px rgba(18,21,25,.5);overflow-x:auto}
+@media (max-width:620px){.neo{grid-template-columns:minmax(0,1fr)}.neo pre.art{display:none}}
+.neo pre{margin:0;font:inherit}
+.neo .art{color:var(--green);line-height:1.15;font-weight:700}
+.neo .k{color:#7FD1B0;font-weight:700}
+.neo .u{color:var(--yellow);font-weight:700}
+.neo .sw{display:flex;gap:0;margin-top:10px}
+.neo .sw i{width:22px;height:14px;display:block}
+.story p{font-size:18px;color:var(--ink2);line-height:1.75}
+.story p+p{margin-top:18px}
+.story p b{color:var(--ink)}
+.sign{display:flex;align-items:center;gap:16px;margin-top:30px}
+.sign img{width:60px;height:60px;border-radius:50%;object-fit:cover;background:var(--mint)}
+.sign .h{font-family:var(--hand);font-size:34px;color:var(--green);line-height:1}
+.sign small{display:block;font-size:14px;color:var(--muted)}
 
-.caps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-@media (max-width:720px){.caps{grid-template-columns:1fr}}
-.cap{background:var(--surface);padding:30px 30px 28px;display:grid;gap:10px;align-content:start}
-.cap h3{font-size:18px;font-weight:600;letter-spacing:-.01em}
-.cap p{color:var(--ink2);font-size:15px}
-.cap .tools2{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);line-height:1.7}
+/* work */
+.mintband{background:var(--mint)}
+.cases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+@media (max-width:980px){.cases{grid-template-columns:minmax(0,1fr)}}
+.case{background:#fff;border-radius:24px;padding:clamp(24px,3vw,40px);display:grid;gap:18px;align-content:start;box-shadow:0 30px 60px -44px rgba(31,77,64,.5);transition:transform .35s,box-shadow .35s;min-width:0}
+.case:hover{transform:translateY(-6px);box-shadow:0 40px 70px -40px rgba(31,77,64,.55)}
+.case.wide{grid-column:1/-1;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,4vw,56px);align-items:center}
+@media (max-width:980px){.case.wide{grid-template-columns:minmax(0,1fr)}}
+.tagrow{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.tag{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+.state{font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--mint);color:var(--green-d)}
+.state.y{background:var(--yellow-soft);color:#8A5F00}
+.case h3{font-size:clamp(24px,2.4vw,32px);font-weight:800}
+.case p{color:var(--ink2);font-size:16px}
+.case p b{color:var(--ink)}
+.big{font-size:clamp(56px,7vw,96px);font-weight:800;letter-spacing:-.05em;line-height:.9;color:var(--green)}
+.big small{display:block;font-size:14px;font-weight:600;letter-spacing:0;color:var(--muted);margin-top:10px}
+code{font-family:var(--mono);font-size:.85em;background:var(--mint);color:var(--green-dd);padding:2px 7px;border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font-family:var(--mono);font-size:12.5px;padding:5px 10px;border-radius:8px;background:var(--soft);border:1px solid var(--line);color:var(--ink2)}
+.steps3{display:grid;gap:14px;margin:4px 0}
+.steps3 div{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;font-size:15.5px;color:var(--ink2)}
+.steps3 dt{font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);padding-top:2px}
+@media (max-width:520px){.steps3 div{grid-template-columns:minmax(0,1fr);gap:2px}}
+.diagram{background:var(--soft);border:1px solid var(--line);border-radius:18px;padding:18px;overflow-x:auto}
+.diagram svg{display:block;width:100%;min-width:540px;height:auto}
+.dg-box{fill:#fff;stroke:#C9D6D1;stroke-width:1.3}
+.dg-box.hot{fill:var(--mint);stroke:var(--green);stroke-width:1.6}
+.dg-t{fill:var(--ink);font-family:var(--f);font-size:13px;font-weight:700}
+.dg-s{fill:var(--muted);font-family:var(--mono);font-size:10.5px}
+.dg-l{stroke:#AFC2BB;stroke-width:1.4;fill:none}
+.dg-l.hot{stroke:var(--green);stroke-width:2;stroke-dasharray:5 5;animation:flow 1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-20}}
+.dg-a{fill:#AFC2BB}.dg-a.hot{fill:var(--green)}
+.more{margin-top:24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:980px){.more{grid-template-columns:minmax(0,1fr)}}
+.mini{background:rgba(255,255,255,.7);border:1px solid var(--mint2);border-radius:18px;padding:22px;display:grid;gap:8px;align-content:start}
+.mini h4{margin:0;font-size:17px;font-weight:800;letter-spacing:-.01em}
+.mini p{font-size:14.5px;color:var(--ink2)}
+.mini a{font-weight:700;font-size:14px;color:var(--green);text-decoration:none}
+.mini a:hover{text-decoration:underline}
 
-.jobs{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:0 32px}
-.job{display:grid;grid-template-columns:150px minmax(0,1fr);gap:32px;padding-block:28px;border-top:1px solid var(--line)}
-.job:first-child{border-top:0}
-@media (max-width:600px){.jobs{padding:0 20px}}
-@media (max-width:640px){.job{grid-template-columns:1fr;gap:8px}}
-.job .when{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:3px}
-.job h3{font-size:18px;font-weight:600;letter-spacing:-.01em}
-.job h3 span{font-weight:400;color:var(--muted)}
-.job p{color:var(--ink2);margin-top:8px;max-width:64ch;font-size:15.5px}
-.job ul{margin:12px 0 0;padding-left:18px;color:var(--ink2);font-size:15.5px;display:grid;gap:6px;max-width:64ch}
-.job ul li::marker{color:var(--line2)}
-
-.prods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
-@media (max-width:720px){.prods{grid-template-columns:1fr}}
-.prod{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:24px;display:grid;gap:8px;align-content:start;transition:border-color .2s,transform .2s}
-.prod:hover{border-color:var(--line2);transform:translateY(-2px)}
-.prod .top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
-.prod h3{font-size:18px;font-weight:600}
-.prod a{font-size:13.5px;color:var(--accent);text-decoration:none;white-space:nowrap}
-.prod a:hover{text-decoration:underline}
-.prod p{color:var(--ink2);font-size:15px}
-.prod .s{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
-
-.creds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:32px}
-@media (max-width:820px){.creds{grid-template-columns:1fr;gap:32px}}
-.creds h3{font-family:var(--f-mono);font-size:12px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-bottom:12px;border-bottom:1px solid var(--line)}
-.creds ul{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:16px}
-.creds li b{display:block;font-weight:500}
-.creds li span{font-size:14.5px;color:var(--muted)}
-
-.contact{padding-block:104px 96px}
-.contact .wrap>div.box{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:clamp(28px,6vw,64px)}
-.contact h2{font-family:var(--f-serif);font-weight:650;font-size:clamp(44px,7vw,80px);line-height:1;letter-spacing:-.025em;max-width:14ch}
-.contact h2 em{font-style:normal;color:var(--accent)}
-.contact .lead{margin-top:22px;font-size:18px;color:var(--ink2);max-width:56ch}
-.mail{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;margin-top:40px}
-.mail .addr{font-family:var(--f-serif);font-weight:600;font-size:clamp(24px,3.6vw,38px);letter-spacing:-.01em;overflow-wrap:anywhere;border-bottom:1px solid var(--line2);padding-bottom:4px;min-width:0}
-.copy{height:40px;padding:0 16px;border-radius:10px;border:1px solid var(--line2);background:var(--surface);color:var(--ink);font:inherit;font-size:14px;cursor:pointer;min-width:110px}
-.copy:hover{border-color:var(--ink2)}
-.elsewhere{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:32px;font-size:15px;color:var(--ink2)}
-.elsewhere .m{color:var(--muted)}
-footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-block:28px 40px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
-
-
-/* delivery */
-.flow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;counter-reset:f}
-@media (max-width:980px){.flow{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:560px){.flow{grid-template-columns:minmax(0,1fr)}}
-.fstep{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 18px 20px;display:grid;gap:8px;align-content:start;min-width:0}
-.fstep::before{counter-increment:f;content:counter(f);display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:var(--f-mono);font-size:12px;font-weight:500}
-.fstep h3{font-size:16px;font-weight:600;letter-spacing:-.01em}
-.fstep p{font-size:14px;color:var(--ink2);line-height:1.5}
-.fstep .tl2{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
-.canary{margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:36px}
-@media (max-width:860px){.canary{grid-template-columns:minmax(0,1fr);padding:22px}}
-.canary h3{font-size:20px;font-weight:650;letter-spacing:-.015em}
-.canary .hint{font-size:14.5px;color:var(--ink2);margin-top:6px}
-.split{margin-top:22px;height:44px;border-radius:10px;overflow:hidden;display:flex;background:var(--sunk);border:1px solid var(--line)}
-.split .stable{background:var(--muted);opacity:.28;transition:flex-basis .7s cubic-bezier(.4,0,.2,1)}
-.split .can{background:var(--accent);transition:flex-basis .7s cubic-bezier(.4,0,.2,1),background .3s;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:#fff;font-family:var(--f-mono);font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden}
-.canary.bad .split .can{background:var(--bad)}
-.legend2{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
-.legend2 b{color:var(--ink);font-weight:500}
-.steps{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
-.steps span{font-family:var(--f-mono);font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted);transition:all .3s}
-.steps span.on{background:var(--accent);border-color:var(--accent);color:#fff}
-.steps span.done{border-color:var(--accent);color:var(--accent)}
-.canary.bad .steps span.on{background:var(--bad);border-color:var(--bad)}
+/* ship (dark) */
+.night{background:var(--night);color:#E8EDF1;position:relative;overflow:hidden}
+.night::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1px);background-size:26px 26px;mask-image:radial-gradient(ellipse at 70% 0%,#000 0%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 70% 0%,#000 0%,transparent 70%);pointer-events:none}
+.night .wrap{position:relative}
+.night .eyebrow{color:var(--yellow)}
+.night .sh p{color:var(--nmuted)}
+.flow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;position:relative}
+@media (max-width:1100px){.flow{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:600px){.flow{grid-template-columns:minmax(0,1fr)}}
+.fs{background:var(--night2);border:1px solid var(--nline);border-radius:18px;padding:22px;display:grid;gap:10px;align-content:start;transition:border-color .3s,transform .3s}
+.fs:hover{border-color:var(--green);transform:translateY(-4px)}
+.fs.on{border-color:var(--yellow);box-shadow:0 0 0 4px rgba(246,195,67,.12)}
+.fs .n{font-family:var(--mono);font-size:12px;color:var(--yellow);font-weight:700}
+.fs h3{font-size:18px;font-weight:800;color:#fff}
+.fs p{font-size:14.5px;color:var(--nmuted);line-height:1.55}
+.fs .tool{font-family:var(--mono);font-size:12px;color:#7FD1B0}
+.canary{margin-top:22px;background:var(--night2);border:1px solid var(--nline);border-radius:24px;padding:clamp(22px,3vw,36px);display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:clamp(24px,4vw,48px)}
+@media (max-width:900px){.canary{grid-template-columns:minmax(0,1fr)}}
+.canary h3{font-size:24px;font-weight:800;color:#fff}
+.canary .hint{color:var(--nmuted);margin-top:8px;font-size:15.5px}
+.split{margin-top:26px;height:56px;border-radius:14px;overflow:hidden;display:flex;background:var(--night3)}
+.split .s{background:#3A424B;transition:flex-basis .8s cubic-bezier(.4,0,.2,1)}
+.split .c{background:var(--green);transition:flex-basis .8s cubic-bezier(.4,0,.2,1),background .3s;display:flex;align-items:center;justify-content:flex-end;padding-right:14px;font-family:var(--mono);font-weight:700;font-size:14px;color:#fff;white-space:nowrap;overflow:hidden}
+.canary.bad .split .c{background:var(--red)}
+.lg{display:flex;justify-content:space-between;gap:12px;margin-top:12px;font-family:var(--mono);font-size:12.5px;color:var(--nmuted)}
+.lg b{color:#fff}
+.pills{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.pills span{font-family:var(--mono);font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;border:1px solid var(--nline);color:var(--nmuted);transition:all .3s}
+.pills span.done{border-color:var(--green);color:#7FD1B0}
+.pills span.on{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+.canary.bad .pills span.on{background:var(--red);border-color:var(--red);color:#fff}
 .gates{display:grid;gap:10px;align-content:start}
-.gate{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:12px 14px;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
-.gate .n{font-size:14px;font-weight:500}
-.gate .v{font-family:var(--f-mono);font-size:13px;font-variant-numeric:tabular-nums;color:var(--ok)}
-.gate .v.badv{color:var(--bad)}
-.gate .th{grid-column:1/-1;font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
-.cstatus{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;background:var(--ok-soft);color:var(--ok);font-size:14px;font-weight:500}
-.cstatus i{flex:none;width:8px;height:8px;border-radius:50%;background:currentColor}
-.canary.bad .cstatus{background:var(--bad-soft);color:var(--bad)}
-.simbtn{justify-self:start;height:38px;padding:0 14px;border-radius:9px;border:1px solid var(--line2);background:var(--surface);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}
-.simbtn:hover{border-color:var(--bad);color:var(--bad)}
-.simbtn:disabled{opacity:.5;cursor:default}
-.principles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:20px}
-@media (max-width:980px){.principles{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:560px){.principles{grid-template-columns:minmax(0,1fr)}}
-.pr{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:6px;align-content:start}
-.pr h3{font-size:15.5px;font-weight:600}
-.pr p{font-size:14px;color:var(--ink2);line-height:1.5}
+.cst{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:12px;background:rgba(63,138,115,.16);color:#7FD1B0;font-weight:700;font-size:14.5px}
+.cst i{flex:none;width:9px;height:9px;border-radius:50%;background:currentColor}
+.canary.bad .cst{background:rgba(229,72,77,.16);color:#FF8A8E}
+.gate{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:13px 16px;border-radius:12px;background:var(--night3)}
+.gate .gn{font-weight:700;font-size:14.5px;color:#fff}
+.gate .gv{font-family:var(--mono);font-size:14px;color:#4ADE80;font-variant-numeric:tabular-nums;font-weight:700}
+.gate .gv.bad{color:#FF8A8E}
+.gate .gt{grid-column:1/-1;font-family:var(--mono);font-size:12px;color:var(--nmuted)}
+.sim{justify-self:start;margin-top:4px;height:44px;padding:0 18px;border-radius:12px;border:1.5px solid #4A535C;background:transparent;color:#fff;font-family:var(--f);font-weight:700;font-size:14.5px;cursor:pointer;transition:all .2s}
+.sim:hover{border-color:#FF8A8E;color:#FF8A8E}
+.sim:disabled{opacity:.45;cursor:default}
 
-.cmdk-back{position:fixed;inset:0;z-index:80;background:rgba(10,13,19,.38);backdrop-filter:blur(3px);display:grid;justify-items:center;align-items:start;padding:max(14vh,calc(env(safe-area-inset-top,0px) + 24px)) max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
-.cmdk-back[hidden]{display:none}
-.cmdk{width:min(560px,100%);background:var(--surface);border:1px solid var(--line2);border-radius:14px;box-shadow:0 30px 80px -20px rgba(0,0,0,.35);overflow:hidden}
-.cmdk input{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:16px;padding:16px 18px;outline:0}
-.cmdk ul{list-style:none;margin:0;padding:6px;max-height:320px;overflow-y:auto}
-.cmdk li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;font-size:14.5px;color:var(--ink2);cursor:pointer}
-.cmdk li span{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
-.cmdk li[aria-selected="true"]{background:var(--sunk);color:var(--ink)}
-.cmdk .foot{display:flex;gap:16px;padding:10px 16px;border-top:1px solid var(--line);font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+/* values */
+.values{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+@media (max-width:1100px){.values{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.values{grid-template-columns:minmax(0,1fr)}}
+.val{border-radius:22px;padding:30px 26px;background:var(--soft);border:1px solid var(--line);display:grid;gap:12px;align-content:start;transition:transform .3s,background .3s}
+.val:hover{transform:translateY(-5px);background:#fff;box-shadow:0 30px 50px -36px rgba(18,21,25,.35)}
+.val .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--green);color:#fff}
+.val:nth-child(2) .ic{background:var(--yellow);color:var(--ink)}
+.val:nth-child(3) .ic{background:var(--ink)}
+.val:nth-child(4) .ic{background:var(--green-dd)}
+.val .ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.val h3{font-size:20px;font-weight:800}
+.val p{font-size:15.5px;color:var(--ink2)}
+.quote{margin-top:24px;border-radius:24px;background:var(--green);color:#fff;padding:clamp(28px,4vw,48px);display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:center}
+@media (max-width:700px){.quote{grid-template-columns:minmax(0,1fr)}}
+.quote .qm{font-size:110px;line-height:.6;font-weight:800;color:var(--yellow);font-family:Georgia,serif}
+.quote p{font-size:clamp(20px,2.2vw,28px);font-weight:700;letter-spacing:-.02em;line-height:1.35}
+.quote small{display:block;margin-top:12px;font-size:15px;font-weight:600;opacity:.8}
 
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--ink);color:var(--bg);font-size:14px;padding:10px 16px;border-radius:10px;transition:all .25s;z-index:90;pointer-events:none}
+/* experience */
+.xp{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);gap:clamp(32px,5vw,80px)}
+@media (max-width:980px){.xp{grid-template-columns:minmax(0,1fr)}}
+.xp-side{position:sticky;top:110px;align-self:start}
+@media (max-width:980px){.xp-side{position:static}}
+.tl{position:relative;display:grid;gap:18px;padding-left:34px}
+.tl::before{content:"";position:absolute;left:9px;top:10px;bottom:10px;width:2px;background:var(--line)}
+.tl .fill{position:absolute;left:9px;top:10px;width:2px;background:var(--green);height:calc((100% - 20px)*var(--tp,0));transition:height .1s linear}
+.job{position:relative;background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px 26px;transition:box-shadow .3s,border-color .3s}
+.job:hover{border-color:var(--mint2);box-shadow:0 24px 40px -30px rgba(31,77,64,.5)}
+.job::before{content:"";position:absolute;left:-31px;top:30px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--mint2)}
+.job.now::before{background:var(--yellow);border-color:var(--green)}
+.job .w{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.job .now-t{display:inline-block;margin-left:8px;font-family:var(--f);font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--yellow);color:var(--ink);vertical-align:1px}
+.job h3{font-size:21px;font-weight:800;margin-top:6px}
+.job h3 span{color:var(--green)}
+.job p{margin-top:8px;color:var(--ink2);font-size:15.5px}
+
+/* products */
+.prods{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+@media (max-width:1100px){.prods{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.prods{grid-template-columns:minmax(0,1fr)}}
+.prod{border-radius:22px;overflow:hidden;background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;transition:transform .3s,box-shadow .3s}
+.prod:hover{transform:translateY(-6px);box-shadow:0 30px 50px -34px rgba(18,21,25,.4)}
+.prod .art{height:150px;position:relative;overflow:hidden}
+.prod .body{padding:20px 22px 22px;display:grid;gap:6px}
+.prod h3{font-size:18px;font-weight:800;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.prod h3 a{font-size:13px;font-weight:700;color:var(--green);text-decoration:none}
+.prod p{font-size:14.5px;color:var(--ink2)}
+.prod .s{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.a1{background:linear-gradient(135deg,var(--green),var(--green-dd))}
+.a2{background:var(--yellow)}
+.a3{background:var(--night)}
+.a4{background:var(--mint)}
+.a1 .doc{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:800;color:var(--green);box-shadow:0 0 0 10px rgba(255,255,255,.15),0 0 0 22px rgba(255,255,255,.07)}
+.a1 .me{position:absolute;right:14px;top:14px;width:54px;height:38px;border-radius:8px;background:rgba(255,255,255,.25)}
+.a2 .bars{position:absolute;left:18px;right:18px;bottom:18px;top:30px;display:flex;align-items:flex-end;gap:8px}
+.a2 .bars i{flex:1;border-radius:6px 6px 0 0;background:var(--ink)}
+.a2 .bars i:nth-child(4){background:#fff}
+.a3 .row{position:absolute;left:16px;right:16px;height:24px;border-radius:7px;background:var(--night3);display:flex;align-items:center;gap:8px;padding:0 8px}
+.a3 .row i{width:12px;height:12px;border-radius:4px;background:var(--green)}
+.a3 .row b{flex:1;height:5px;border-radius:3px;background:#3A424B}
+.a3 .row u{width:26px;height:8px;border-radius:4px;background:var(--yellow)}
+.a4 .t{position:absolute;border:2px solid var(--green);background:#fff;border-radius:50%}
+.a4 .t.sq{border-radius:6px}
+.a4 .t.busy{border-color:#C99A1F;background:var(--yellow-soft)}
+
+/* now */
+.nowgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:980px){.nowgrid{grid-template-columns:minmax(0,1fr)}}
+.nowc{border-radius:22px;padding:28px;background:#fff;border:1px solid var(--mint2);display:grid;gap:10px;align-content:start}
+.nowc .lbl{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--green)}
+.nowc h3{font-size:20px;font-weight:800}
+.nowc p{font-size:15.5px;color:var(--ink2)}
+.bar{height:8px;border-radius:999px;background:var(--mint);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--yellow));border-radius:999px;width:var(--w)}
+.creds{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+.cred{display:flex;align-items:center;gap:14px;padding:14px 20px 14px 14px;border-radius:16px;background:#fff;border:1px solid var(--mint2)}
+.cred b{display:grid;place-items:center;min-width:58px;height:44px;padding:0 8px;border-radius:11px;background:var(--green);color:#fff;font-size:13.5px;font-weight:800}
+.cred.y b{background:var(--yellow);color:var(--ink)}
+.cred.d b{background:var(--ink)}
+.cred span{font-size:14.5px;font-weight:700}
+.cred small{display:block;font-size:13px;font-weight:500;color:var(--muted)}
+.cred a{text-decoration:none}
+
+/* contact */
+.contact{background:var(--green);color:#fff;position:relative;overflow:hidden}
+.contact::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:var(--yellow);opacity:.9}
+.contact::before{content:"";position:absolute;right:140px;bottom:-160px;width:320px;height:320px;border-radius:50%;border:2px solid rgba(255,255,255,.25)}
+.contact .wrap{position:relative;z-index:1}
+.contact .eyebrow{color:var(--yellow)}
+.contact h2{font-size:clamp(40px,6vw,88px);font-weight:800;letter-spacing:-.045em;line-height:1;max-width:14ch;margin-top:18px}
+.contact .lead{margin-top:22px;font-size:clamp(17px,1.4vw,20px);max-width:56ch;opacity:.92}
+.mailrow{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;margin-top:40px}
+.mail{font-size:clamp(22px,3vw,36px);font-weight:800;letter-spacing:-.02em;color:#fff;text-decoration:none;border-bottom:3px solid var(--yellow);padding-bottom:4px;overflow-wrap:anywhere}
+.copy{height:46px;padding:0 18px;border-radius:12px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:#fff;font-family:var(--f);font-weight:700;font-size:14.5px;cursor:pointer;min-width:120px;transition:all .2s}
+.copy:hover{background:#fff;color:var(--green)}
+.links{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.links a{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 18px;border-radius:12px;background:rgba(255,255,255,.12);color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;transition:background .2s}
+.links a:hover{background:rgba(255,255,255,.22)}
+.links svg{width:18px;height:18px;fill:currentColor}
+footer{background:var(--ink);color:#9AA5AE}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-block:26px;font-family:var(--mono);font-size:13px}
+footer b{color:#7FD1B0;font-weight:500}
+
+/* reveal (transform only, content always visible) */
+.rv{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.js .rv:not(.in){transform:translateY(32px)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:#fff;font-weight:600;font-size:14.5px;padding:12px 18px;border-radius:12px;transition:all .25s;z-index:90;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-
-@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.js .rv:not(.in){transform:none}}
 </style>
+</head>
+<body>
 
-</head><body>
-<header class="top" id="hdr">
+<header class="nav" id="nav">
   <div class="wrap">
-    <a class="name" href="#top">Rizwan Zafar <span>· Platform Engineer</span></a>
-    <nav class="links" aria-label="Sections">
-      <a href="#work">Work</a><a href="#delivery">How I ship</a><a href="#capabilities">Capabilities</a><a href="#experience">Experience</a><a href="#contact">Contact</a>
-    </nav>
-    <div class="tools">
-      <button class="kbtn" type="button" id="kopen" aria-label="Open command menu"><span class="t">Quick nav</span><kbd id="kkey">⌘K</kbd></button>
-      <button class="tbtn" type="button" id="theme" aria-label="Toggle color theme"><svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></button>
-    </div>
+    <a class="logo" href="#top"><b>rz</b>Rizwan Zafar</a>
+    <nav aria-label="Sections"><a href="#about">About</a><a href="#work">Work</a><a href="#ship">How I ship</a><a href="#experience">Experience</a><a href="#now">Now</a></nav>
+    <a class="btn btn-green" href="#contact">Let's talk</a>
   </div>
 </header>
 
 <main id="top">
-  <div class="wrap hero">
-    <span class="avail"><i></i>Available for senior DevOps &amp; platform roles and consulting</span>
-    <h1>Every system fails eventually. I make sure yours <em>fails small and recovers fast.</em></h1>
-    <p class="sub">I'm <strong>Rizwan Zafar</strong>, a DevOps &amp; Platform Engineer with 3+ years across bare metal, Kubernetes, AWS and Azure. I run carrier-grade infrastructure at <strong>Dial Edge Telecom</strong>, where my systems serve over a billion records at sub-millisecond latency.</p>
-    <div class="cta">
-      <a class="btn" href="#contact"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>Start a conversation</a>
-      <a class="tlink" href="#work">See selected work <span>→</span></a>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <span class="status"><i></i>Available for senior DevOps &amp; platform work</span>
+        <h1>I keep production <span class="mark">calm</span>, so your team can <span class="g">keep shipping.</span></h1>
+        <p class="lede">I'm <b>Rizwan</b>, a DevOps &amp; Platform Engineer. For 3+ years I've run Linux fleets, Kubernetes, AWS and Azure for telecom systems where a bad deploy means dropped calls. I build pipelines that release safely, monitoring that catches trouble early, and rollbacks that take seconds.</p>
+        <div class="cta">
+          <a class="btn btn-green" href="#work">See my work <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+        </div>
+        <div class="trust">
+          <img src="https://github.com/rizwan441.png?size=160" alt="Rizwan Zafar" width="54" height="54">
+          <div><div class="t1">Rizwan Zafar</div><div class="t2">Islamabad · remote, worldwide</div></div>
+          <span class="sep" aria-hidden="true"></span>
+          <div class="badges"><span>AZ-400</span><span>AZ-104</span><span>IEEE published</span></div>
+        </div>
+      </div>
+
+      <div class="stage rv">
+        <div class="float f2"><span class="ic">✓</span><div>Deploy succeeded<small>api v2.4.1 · 42s</small></div></div>
+        <div class="term" role="img" aria-label="Animated terminal showing a server health check, Kubernetes nodes and a Helm release">
+          <div class="term-top"><i></i><i></i><i></i><span>rizwan@prod-01: ~</span></div>
+          <div class="term-body" id="term"></div>
+        </div>
+        <div class="float f1"><span class="ic y">p99</span><div>182 ms<small>under the 300 ms SLO</small></div></div>
+        <div class="float f3"><span class="ic">↺</span><div>Rollback ready<small>one git revert away</small></div></div>
+      </div>
     </div>
-    <div class="meta">
-      <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>Remote, with teams worldwide</span>
-      <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>UTC+5 · overlaps Europe and US mornings</span>
-      <span><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg>Microsoft Certified · AZ-400 · AZ-104</span>
+  </div>
+
+  <div class="strip" aria-label="Tools I use">
+    <div class="track">
+      <span>kubernetes</span><span>helm</span><span>argo cd</span><span>terraform</span><span>ansible</span><span>github actions</span><span>jenkins</span><span>docker</span><span>prometheus</span><span>grafana</span><span>aws</span><span>azure</span><span>proxmox</span><span>nginx</span><span>postgresql</span><span>redis</span><span>asterisk</span><span>bash</span><span>go</span><span>python</span>
+      <span>kubernetes</span><span>helm</span><span>argo cd</span><span>terraform</span><span>ansible</span><span>github actions</span><span>jenkins</span><span>docker</span><span>prometheus</span><span>grafana</span><span>aws</span><span>azure</span><span>proxmox</span><span>nginx</span><span>postgresql</span><span>redis</span><span>asterisk</span><span>bash</span><span>go</span><span>python</span>
     </div>
   </div>
 
   <div class="wrap">
-    <div class="proof">
-      <div><b>1.18B</b><span>records served from an in-memory lookup engine</span></div>
-      <div><b>&lt;1 ms</b><span>lookup latency held at that scale</span></div>
-      <div><b>20+</b><span>dashboards generated from a single source of truth</span></div>
-      <div><b>200+</b><span>VMs in a multi-tenant hosted platform design</span></div>
+    <div class="stats">
+      <div class="stat rv"><b data-n="1.18" data-d="2" data-s="B">1.18B</b><span>records served from memory on a carrier lookup platform</span></div>
+      <div class="stat rv"><b>&lt;1ms</b><span>lookup latency, held at full scale</span></div>
+      <div class="stat rv"><b data-n="20" data-s="+">20+</b><span>Grafana dashboards generated from one Python source</span></div>
+      <div class="stat rv"><b data-n="200" data-s="+">200+</b><span>VMs in a multi-tenant hosted call-center design</span></div>
     </div>
-    <div class="orgs"><span class="label">Experience at</span><b>Dial Edge Telecom</b><b>Sterlings Tech</b><b>TAK Devs</b><b>HEC PERN research network</b></div>
   </div>
 
-  <section id="work">
+  <!-- ABOUT -->
+  <section id="about" style="padding-top:0">
+    <div class="wrap about">
+      <div class="neo rv" aria-label="About me, written as a Linux system summary">
+<pre class="art">   .--.
+  |o_o |
+  |:_/ |
+ //   \ \
+(|     | )
+/'\_   _/`\
+\___)=(___/</pre>
+<pre><span class="u">rizwan</span>@<span class="u">earth</span>
+-------------
+<span class="k">role</span>     DevOps &amp; Platform Engineer
+<span class="k">uptime</span>   <span id="up">3 years</span> in production
+<span class="k">shell</span>    bash, a little too much
+<span class="k">distro</span>   Ubuntu · RHEL · Proxmox VE
+<span class="k">cloud</span>    AWS · Azure
+<span class="k">orchestr</span> Kubernetes · OpenShift · Helm
+<span class="k">ci/cd</span>    GitHub Actions · Jenkins · GitOps
+<span class="k">observe</span>  Prometheus · Grafana · Alertmanager
+<span class="k">telecom</span>  Asterisk · FreeSWITCH · SIP
+<span class="k">learning</span> EX280 OpenShift · Azure deep dive
+<span class="k">fuel</span>     chai ☕
+<div class="sw"><i style="background:#121519"></i><i style="background:#E5484D"></i><i style="background:#3F8A73"></i><i style="background:#F6C343"></i><i style="background:#3B82F6"></i><i style="background:#A855F7"></i><i style="background:#14B8A6"></i><i style="background:#E4E9E7"></i></div></pre>
+      </div>
+      <div class="story rv">
+        <span class="eyebrow">About me</span>
+        <h2 style="font-size:clamp(32px,3.6vw,50px);font-weight:800;margin:16px 0 26px">I started at the cable, and worked my way up the stack.</h2>
+        <p>My first job was keeping <b>Pakistan's national research network</b> running across university campuses: fiber, VLANs, routing faults at 2 a.m. Then I spent years writing <b>Angular and Node.js</b> apps. Somewhere along the way I got more curious about where those apps actually ran than the apps themselves.</p>
+        <p>Today I run infrastructure at <b>Dial Edge Telecom</b>. I care about the quiet things: a pipeline nobody has to babysit, an alert that means something, a runbook written before it's needed. When something does break, I want to be the calm person on the call who already has the graphs open.</p>
+        <div class="sign">
+          <img src="https://github.com/rizwan441.png?size=120" alt="" width="60" height="60" loading="lazy">
+          <div><span class="h">Rizwan</span><small>B.Sc. Computer Systems Engineering, UET Peshawar</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work" class="mintband">
     <div class="wrap">
-      <div class="shead col">
-        <span class="label">Selected work</span>
-        <h2>Three problems, how I approached them, and what changed.</h2>
+      <div class="sh duo rv">
+        <div style="display:grid;gap:16px"><span class="eyebrow">Selected work</span><h2>Real systems, real incidents, real fixes.</h2></div>
+        <p>Production work from Dial Edge Telecom. Each one starts with a problem someone was losing sleep over.</p>
       </div>
 
-      <article class="case">
-        <aside>
-          <span class="num">01 · Distributed systems</span>
-          <h3>Carrier DID Lookup Platform</h3>
-          <span class="role">Dial Edge Telecom · Architecture &amp; operations</span>
-          <div class="result"><b>1.18B records</b><span>served in memory at sub-millisecond latency</span></div>
-        </aside>
-        <div>
-          <dl>
-            <div><dt>Context</dt><dd>Telecom carriers need an instant answer for every phone number (DID) on every call. The dataset held <strong>1.18 billion records</strong>, and lookups had to stay under a millisecond.</dd></div>
-            <div><dt>Approach</dt><dd>Modeled RAM per record and found a <strong>128&nbsp;GB operational ceiling</strong>, then designed a tiered scaling path before it was needed. Built a snapshot-based serving layer that keeps PostgreSQL as the source of truth and serves reads from memory.</dd></div>
-            <div><dt>Outcome</dt><dd>Sub-millisecond lookups at full scale. Caught an OOM risk mid-build through CPU/RSS monitoring, and resolved a production deadlock (<code>SQLSTATE 40P01</code>) with deterministic ordering and retry.</dd></div>
-          </dl>
-          <div class="diagram" role="img" aria-label="Architecture: PostgreSQL feeds a snapshot builder, which loads in-memory lookup nodes behind the lookup API. NATS JetStream carries change events, ClickHouse stores analytics and Prometheus monitors the lookup layer.">
-            <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg">
+      <div class="cases">
+        <article class="case wide rv">
+          <div style="display:grid;gap:18px">
+            <div class="tagrow"><span class="tag">Distributed systems</span><span class="state">In production</span></div>
+            <h3>Carrier DID Lookup Platform</h3>
+            <div class="big">1.18B<small>phone-number records, answered in under a millisecond</small></div>
+            <dl class="steps3" style="margin:0">
+              <div><dt>Problem</dt><dd style="margin:0">Every call needs an instant lookup across a billion-plus records.</dd></div>
+              <div><dt>Approach</dt><dd style="margin:0">Modeled RAM per record, found a <b>128&nbsp;GB ceiling</b>, planned tiered scaling. PostgreSQL stays the source of truth; reads come from memory snapshots.</dd></div>
+              <div><dt>Saved</dt><dd style="margin:0">Caught an OOM risk mid-build; fixed a prod deadlock <code>SQLSTATE 40P01</code>.</dd></div>
+            </dl>
+            <div class="chips"><span>Go</span><span>PostgreSQL 16</span><span>Redis 7</span><span>NATS JetStream</span><span>ClickHouse</span></div>
+          </div>
+          <div class="diagram" role="img" aria-label="Architecture: PostgreSQL to snapshot builder to in-memory lookup to lookup API; NATS for change events; ClickHouse for analytics; Prometheus monitoring">
+            <svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="dg-a" d="M0,0L10,5L0,10z"/></marker>
                 <marker id="arh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="dg-a hot" d="M0,0L10,5L0,10z"/></marker>
               </defs>
-              <rect class="dg-box" x="10" y="30" width="130" height="58" rx="8"/><text class="dg-t" x="24" y="56">PostgreSQL 16</text><text class="dg-s" x="24" y="74">source of truth</text>
-              <rect class="dg-box" x="180" y="30" width="130" height="58" rx="8"/><text class="dg-t" x="194" y="56">Snapshot builder</text><text class="dg-s" x="194" y="74">Go · versioned</text>
-              <rect class="dg-box hot" x="350" y="18" width="140" height="82" rx="8"/><text class="dg-t" x="364" y="46">In-memory lookup</text><text class="dg-s" x="364" y="64">1.18B records</text><text class="dg-s" x="364" y="80">sub-ms reads</text>
-              <rect class="dg-box" x="530" y="30" width="100" height="58" rx="8"/><text class="dg-t" x="544" y="56">Lookup API</text><text class="dg-s" x="544" y="74">carriers</text>
-              <rect class="dg-box" x="180" y="148" width="130" height="54" rx="8"/><text class="dg-t" x="194" y="172">NATS JetStream</text><text class="dg-s" x="194" y="189">change events</text>
-              <rect class="dg-box" x="350" y="148" width="140" height="54" rx="8"/><text class="dg-t" x="364" y="172">ClickHouse</text><text class="dg-s" x="364" y="189">query analytics</text>
-              <rect class="dg-box" x="530" y="148" width="100" height="54" rx="8"/><text class="dg-t" x="544" y="172">Prometheus</text><text class="dg-s" x="544" y="189">CPU · RSS</text>
-              <path class="dg-l" d="M140,59 H176" marker-end="url(#ar)"/>
-              <path class="dg-l hot" d="M310,59 H346" marker-end="url(#arh)"/>
-              <path class="dg-l hot" d="M490,59 H526" marker-end="url(#arh)"/>
-              <path class="dg-l" d="M75,88 V175 H176" marker-end="url(#ar)"/>
-              <path class="dg-l" d="M245,148 V92" marker-end="url(#ar)"/>
-              <path class="dg-l" d="M420,100 V144" marker-end="url(#ar)"/>
-              <path class="dg-l" d="M580,144 V92" marker-end="url(#ar)" stroke-dasharray="3 3"/>
+              <rect class="dg-box" x="10" y="32" width="130" height="60" rx="10"/><text class="dg-t" x="24" y="58">PostgreSQL 16</text><text class="dg-s" x="24" y="77">source of truth</text>
+              <rect class="dg-box" x="180" y="32" width="130" height="60" rx="10"/><text class="dg-t" x="194" y="58">Snapshot builder</text><text class="dg-s" x="194" y="77">Go · versioned</text>
+              <rect class="dg-box hot" x="350" y="20" width="140" height="84" rx="10"/><text class="dg-t" x="364" y="48">In-memory lookup</text><text class="dg-s" x="364" y="67">1.18B records</text><text class="dg-s" x="364" y="84">sub-ms reads</text>
+              <rect class="dg-box" x="530" y="32" width="100" height="60" rx="10"/><text class="dg-t" x="544" y="58">Lookup API</text><text class="dg-s" x="544" y="77">carriers</text>
+              <rect class="dg-box" x="180" y="154" width="130" height="56" rx="10"/><text class="dg-t" x="194" y="178">NATS JetStream</text><text class="dg-s" x="194" y="196">change events</text>
+              <rect class="dg-box" x="350" y="154" width="140" height="56" rx="10"/><text class="dg-t" x="364" y="178">ClickHouse</text><text class="dg-s" x="364" y="196">query analytics</text>
+              <rect class="dg-box" x="530" y="154" width="100" height="56" rx="10"/><text class="dg-t" x="544" y="178">Prometheus</text><text class="dg-s" x="544" y="196">CPU · RSS</text>
+              <path class="dg-l" d="M140,62 H176" marker-end="url(#ar)"/>
+              <path class="dg-l hot" d="M310,62 H346" marker-end="url(#arh)"/>
+              <path class="dg-l hot" d="M490,62 H526" marker-end="url(#arh)"/>
+              <path class="dg-l" d="M75,92 V182 H176" marker-end="url(#ar)"/>
+              <path class="dg-l" d="M245,154 V96" marker-end="url(#ar)"/>
+              <path class="dg-l" d="M420,104 V150" marker-end="url(#ar)"/>
+              <path class="dg-l" d="M580,150 V96" marker-end="url(#ar)" stroke-dasharray="3 3"/>
             </svg>
-            <p class="cap">Simplified architecture. Reads never touch the database; snapshots are rebuilt from PostgreSQL and swapped in.</p>
           </div>
-          <div class="stack"><span>Go</span><span>PostgreSQL 16</span><span>Redis 7</span><span>NATS JetStream</span><span>ClickHouse</span><span>Docker</span><span>Prometheus</span></div>
-        </div>
-      </article>
+        </article>
 
-      <article class="case">
-        <aside>
-          <span class="num">02 · Observability</span>
-          <h3>Fleet monitoring that sees crashed containers</h3>
-          <span class="role">Dial Edge Telecom · Design &amp; build</span>
-          <div class="result"><b>4 servers, one view</b><span>staging, production, monitoring and legacy</span></div>
-        </aside>
-        <div>
-          <dl>
-            <div><dt>Context</dt><dd>Infrastructure spanned bare metal and cloud with no single view of health across hosts, containers, databases and endpoints.</dd></div>
-            <div><dt>Problem</dt><dd>cAdvisor drops a container's metrics the moment it stops, so <strong>crashed containers disappeared from dashboards</strong> instead of turning red.</dd></div>
-            <div><dt>Approach</dt><dd>Centralized Prometheus, Grafana and Alertmanager. Wrote a <code>last_over_time</code> + <code>container_last_seen</code> PromQL pattern that surfaces dead containers reliably. Generated <strong>20+ dashboards from Python</strong> so they stay consistent, and shipped everything through GitOps with post-deploy health gates.</dd></div>
-            <div><dt>Outcome</dt><dd>One place to see the whole fleet, alerts that fire on crashes, UFW network segmentation, and a one-command script to onboard new hosts.</dd></div>
-          </dl>
-          <div class="stack"><span>Prometheus</span><span>PromQL</span><span>Grafana</span><span>Alertmanager</span><span>cAdvisor</span><span>Python</span><span>GitHub Actions</span></div>
-        </div>
-      </article>
+        <article class="case rv">
+          <div class="tagrow"><span class="tag">Observability</span><span class="state">In production</span></div>
+          <h3>Monitoring that notices when a container dies</h3>
+          <p>cAdvisor drops a container's metrics the moment it stops, so <b>crashed containers simply vanished</b> from dashboards. I wrote a <code>last_over_time</code> + <code>container_last_seen</code> PromQL pattern that keeps them visible and alerting.</p>
+          <p>Centralized Prometheus, Grafana and Alertmanager across 4 servers, with <b>20+ dashboards generated from Python</b> and a one-command host onboarding script.</p>
+          <div class="chips"><span>Prometheus</span><span>PromQL</span><span>Grafana</span><span>Alertmanager</span><span>Python</span></div>
+        </article>
 
-      <article class="case">
-        <aside>
-          <span class="num">03 · Incident response</span>
-          <h3>Network flapping in production</h3>
-          <span class="role">Dial Edge Telecom · Diagnosis &amp; remediation</span>
-          <div class="result"><b>Root-caused</b><span>then redesigned so this failure mode cannot repeat</span></div>
-        </aside>
-        <div>
-          <dl>
-            <div><dt>Symptom</dt><dd>Production nodes intermittently lost network connectivity with no obvious pattern.</dd></div>
-            <div><dt>Root cause</dt><dd>A UFW firewall sync agent had entered an <strong>infinite loop</strong>, continuously re-applying rules and dropping connections each time.</dd></div>
-            <div><dt>Fix</dt><dd>Stabilized production first, then rebuilt the agent around <strong>diff-based, idempotent reconciliation</strong>, so it only changes what actually differs. Separately moved latency-sensitive telecom services to Docker Macvlan for direct LAN IPs, removing a bridge-NAT bottleneck.</dd></div>
-          </dl>
-          <div class="stack"><span>Linux</span><span>UFW</span><span>Ansible</span><span>systemd</span><span>Docker Macvlan</span><span>Proxmox VE</span></div>
-        </div>
-      </article>
+        <article class="case rv">
+          <div class="tagrow"><span class="tag">Incident response</span><span class="state">Resolved</span></div>
+          <h3>The firewall that kept dropping production</h3>
+          <p>Nodes kept losing network at random. The cause: a UFW sync agent stuck in an <b>infinite loop</b>, re-applying rules and cutting connections each time.</p>
+          <p>I stabilized production first, then rebuilt the agent around <b>diff-based, idempotent reconciliation</b>. It now only changes what actually differs. Also moved latency-sensitive telecom services to Docker Macvlan to remove a bridge-NAT bottleneck.</p>
+          <div class="chips"><span>Linux</span><span>UFW</span><span>Ansible</span><span>systemd</span><span>Macvlan</span></div>
+        </article>
+      </div>
 
       <div class="more">
-        <h3 class="label">More work</h3>
-        <div class="item"><span class="t">CI/CD platform with private registry<span class="pill ok">production</span></span><span class="s">Jenkins · GitHub Actions · Harbor</span><p class="d">Bare-metal Jenkins and GitHub Actions on self-hosted runners, Harbor registry, Helm releases, and path-based selective deploys that shrink blast radius.</p></div>
-        <div class="item"><span class="t">ScrubberPot<span class="pill ok">shipped</span></span><span class="s">Go · PHP · Nginx</span><p class="d">Multi-service honeypot and VoIP lead-scrubbing platform with matrix-build CI/CD, multi-domain routing and JWT single sign-on.</p></div>
-        <div class="item"><span class="t">DID Management Portal<span class="pill ok">shipped</span></span><span class="s">Go · React · Harbor</span><p class="d">Billion-scale telecom portal with decoupled async ingestion for 1M+ record imports.</p></div>
-        <div class="item"><span class="t"><a href="https://github.com/rizwan441/k8s-enterprise-foundations" target="_blank" rel="noopener">Kubernetes Production Patterns</a><span class="pill oss">open source</span></span><span class="s">Kubernetes · RBAC</span><p class="d">Reference lab for multi-tenant clusters: per-environment namespaces, least-privilege RBAC, LimitRanges, ResourceQuotas and QoS testing.</p></div>
-        <div class="item"><span class="t">ML answering-machine detection<span class="pill wip">in progress</span></span><span class="s">Python · FastAPI · DVC</span><p class="d">Classifies human, voicemail and spam on real call audio to replace rule-based detection in Asterisk.</p></div>
+        <div class="mini rv"><h4>Bare-metal CI/CD</h4><p>Jenkins + GitHub Actions on self-hosted runners, Harbor registry, Helm releases and path-based selective deploys.</p></div>
+        <div class="mini rv"><h4>ScrubberPot</h4><p>VoIP honeypot and lead-scrubbing platform with matrix-build CI/CD, multi-domain Nginx routing and JWT SSO.</p></div>
+        <div class="mini rv"><h4>Kubernetes Production Patterns</h4><p>Open-source lab for multi-tenant clusters: RBAC, quotas, LimitRanges and QoS testing.</p><a href="https://github.com/rizwan441/k8s-enterprise-foundations" target="_blank" rel="noopener">View on GitHub →</a></div>
       </div>
     </div>
   </section>
 
-  <section id="delivery">
+  <!-- SHIP -->
+  <section id="ship" class="night">
     <div class="wrap">
-      <div class="shead col">
-        <span class="label">How I ship</span>
-        <h2>Releases should be boring. This is how I keep them that way.</h2>
-        <p>No system has zero downtime. What you can control is how much a bad change can break, how fast you notice, and how quickly you undo it. Every release I build goes through the same path.</p>
+      <div class="sh duo rv">
+        <div style="display:grid;gap:16px"><span class="eyebrow">How I ship</span><h2 style="color:#fff">Every system fails. Good releases fail small.</h2></div>
+        <p>Zero downtime doesn't exist. What I control is how much a bad change can break, how fast we notice, and how quickly we undo it. Every release follows the same path.</p>
       </div>
-      <div class="flow">
-        <div class="fstep"><h3>Commit &amp; review</h3><p>Pull request, review, automated tests and static checks before anything merges.</p><span class="tl2">GitHub · CI</span></div>
-        <div class="fstep"><h3>Build &amp; publish</h3><p>Immutable, tagged container image pushed to a private registry.</p><span class="tl2">Docker · Harbor</span></div>
-        <div class="fstep"><h3>Package with Helm</h3><p>Versioned charts with per-environment values, so staging and production differ only where intended.</p><span class="tl2">Helm</span></div>
-        <div class="fstep"><h3>GitOps sync</h3><p>The cluster reconciles itself to what's in Git. Every change is reviewed, audited and revertible.</p><span class="tl2">Argo CD / Flux</span></div>
-        <div class="fstep"><h3>Canary rollout</h3><p>New version takes a small slice of traffic first, then more, only while it stays healthy.</p><span class="tl2">5% → 25% → 50% → 100%</span></div>
-        <div class="fstep"><h3>Verify or roll back</h3><p>Error rate, latency and saturation are checked at each step. A breach rolls back automatically.</p><span class="tl2">Prometheus · alerts</span></div>
+      <div class="flow" id="flow">
+        <div class="fs rv"><span class="n">01</span><h3>Commit &amp; review</h3><p>Pull request, review, tests and static checks before merge.</p><span class="tool">git · ci</span></div>
+        <div class="fs rv"><span class="n">02</span><h3>Build &amp; publish</h3><p>Immutable, tagged image pushed to a private registry.</p><span class="tool">docker · harbor</span></div>
+        <div class="fs rv"><span class="n">03</span><h3>Package with Helm</h3><p>Versioned charts, per-environment values. No snowflakes.</p><span class="tool">helm</span></div>
+        <div class="fs rv"><span class="n">04</span><h3>GitOps sync</h3><p>The cluster reconciles to Git. Every change is reviewed and revertible.</p><span class="tool">argo cd · flux</span></div>
+        <div class="fs rv"><span class="n">05</span><h3>Canary rollout</h3><p>A small slice of traffic first, more only while it stays healthy.</p><span class="tool">5 → 25 → 50 → 100%</span></div>
+        <div class="fs rv"><span class="n">06</span><h3>Verify or roll back</h3><p>Errors, latency and saturation checked each step. Breach means rollback.</p><span class="tool">prometheus · alerts</span></div>
       </div>
 
-      <div class="canary" id="canary">
+      <div class="canary rv" id="canary">
         <div>
-          <h3>Canary release, live</h3>
-          <p class="hint">A simulated rollout of <span class="mono">api v2.4.1</span>. Traffic shifts only while every health gate passes.</p>
-          <div class="split" aria-hidden="true"><div class="stable" id="cStable" style="flex-basis:75%"></div><div class="can" id="cCan" style="flex-basis:25%">25%</div></div>
-          <div class="legend2"><span>stable <b>v2.4.0</b> · <b id="cStablePct">75%</b></span><span>canary <b>v2.4.1</b> · <b id="cCanPct">25%</b></span></div>
-          <div class="steps" id="cSteps"><span class="done">5%</span><span class="on">25%</span><span>50%</span><span>100%</span></div>
+          <h3>Watch a canary release</h3>
+          <p class="hint">Simulated rollout of <span class="mono">api v2.4.1</span>. Traffic moves only while every gate is green. Try breaking it.</p>
+          <div class="split" aria-hidden="true"><div class="s" id="cS" style="flex-basis:75%"></div><div class="c" id="cC" style="flex-basis:25%">25%</div></div>
+          <div class="lg"><span>stable <b>v2.4.0</b> · <b id="cSP">75%</b></span><span>canary <b>v2.4.1</b> · <b id="cCP">25%</b></span></div>
+          <div class="pills" id="cP"><span class="done">5%</span><span class="on">25%</span><span>50%</span><span>100%</span></div>
         </div>
         <div class="gates">
-          <div class="cstatus" id="cStatus" role="status" aria-live="polite"><i></i><span id="cStatusT">Healthy · promoting to 50% next</span></div>
-          <div class="gate"><span class="n">Error rate</span><span class="v" id="gErr">0.12%</span><span class="th">gate: below 1.0%</span></div>
-          <div class="gate"><span class="n">p99 latency</span><span class="v" id="gLat">182 ms</span><span class="th">gate: below 300 ms</span></div>
-          <div class="gate"><span class="n">Pod restarts</span><span class="v" id="gRes">0</span><span class="th">gate: zero</span></div>
-          <button class="simbtn" type="button" id="simBad">Simulate a bad release</button>
+          <div class="cst" role="status" aria-live="polite"><i></i><span id="cT">Healthy · promoting to 50% next</span></div>
+          <div class="gate"><span class="gn">Error rate</span><span class="gv" id="gE">0.12%</span><span class="gt">gate: below 1.0%</span></div>
+          <div class="gate"><span class="gn">p99 latency</span><span class="gv" id="gL">182 ms</span><span class="gt">gate: below 300 ms</span></div>
+          <div class="gate"><span class="gn">Pod restarts</span><span class="gv" id="gR">0</span><span class="gt">gate: zero</span></div>
+          <button class="sim" type="button" id="sim">Simulate a bad release</button>
         </div>
       </div>
-
-      <div class="principles">
-        <div class="pr"><h3>Small blast radius</h3><p>Path-based selective deploys and canaries mean one bad change touches as little as possible.</p></div>
-        <div class="pr"><h3>Fast, automatic rollback</h3><p>Rolling back is one Git revert or an automatic step, never a midnight manual fix.</p></div>
-        <div class="pr"><h3>Git is the source of truth</h3><p>Infrastructure and config live in Git, so drift is visible and every change has an author.</p></div>
-        <div class="pr"><h3>Observable by default</h3><p>Every service ships with metrics, dashboards and alerts before it takes real traffic.</p></div>
-      </div>
     </div>
   </section>
 
-  <section id="capabilities">
+  <!-- VALUES -->
+  <section id="values">
     <div class="wrap">
-      <div class="shead col">
-        <span class="label">Capabilities</span>
-        <h2>What teams bring me in for.</h2>
+      <div class="sh rv"><span class="eyebrow">What you can count on</span><h2>Skills get you hired. <span class="mark">Consistency</span> keeps the trust.</h2></div>
+      <div class="values">
+        <div class="val rv"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.4 8.4-8 9-4.6-.6-8-4-8-9V7z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><h3>Same on a quiet Tuesday</h3><p>I work the same way during an outage as on a calm day. Checklists, not heroics.</p></div>
+        <div class="val rv"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><h3>Bad news, early</h3><p>If something will slip or break, you hear it from me first, with the blast radius and a plan.</p></div>
+        <div class="val rv"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg></span><h3>Written down</h3><p>Runbooks, READMEs and post-incident notes, so the next person isn't guessing at 3 a.m.</p></div>
+        <div class="val rv"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0114-5.3L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 01-14 5.3L4 15"/><path d="M4 20v-5h5"/></svg></span><h3>Fix the cause</h3><p>Every incident ends with a change that stops it happening again, not just a restart.</p></div>
       </div>
-      <div class="caps">
-        <div class="cap"><h3>Platform &amp; Kubernetes</h3><p>Container platforms that developers can ship to without thinking about the infrastructure underneath.</p><p class="tools2">Kubernetes · Helm · OpenShift · Docker · Harbor · Proxmox VE · KVM</p></div>
-        <div class="cap"><h3>CI/CD &amp; automation</h3><p>Pipelines that test, build and deploy on every push, with health checks that stop a bad release.</p><p class="tools2">GitHub Actions · Jenkins · Azure Pipelines · Terraform · Ansible · GitOps</p></div>
-        <div class="cap"><h3>Observability &amp; reliability</h3><p>Monitoring that catches problems early, and incident follow-up that stops the same failure from repeating.</p><p class="tools2">Prometheus · Grafana · Alertmanager · ELK · ClickHouse</p></div>
-        <div class="cap"><h3>Cloud, networking &amp; telecom</h3><p>Hybrid bare-metal and cloud designs, from L2/L3 networking up to SIP and VoIP platforms.</p><p class="tools2">AWS · Azure · Nginx · VLAN · Asterisk · FreeSWITCH · SIP</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="experience">
-    <div class="wrap">
-      <div class="shead col">
-        <span class="label">Experience</span>
-        <h2>From the physical network to the platform.</h2>
-      </div>
-      <div class="jobs">
-        <div class="job"><span class="when">2026 — Now</span><div><h3>DevOps &amp; Infrastructure Engineer <span>· Dial Edge Telecom</span></h3>
-          <ul><li>Run a multi-node bare-metal Linux fleet with Ansible and systemd, including drift correction and patching.</li><li>Operate a hybrid Proxmox / KVM / LXC and AWS architecture for burst capacity and offsite backup.</li><li>Deploy services on Kubernetes with Helm; built the CI/CD and observability platforms.</li></ul></div></div>
-        <div class="job"><span class="when">2025 — 2026</span><div><h3>Platform Engineer <span>· Sterlings Tech</span></h3>
-          <p>Deployed containerized services to AWS EC2 and S3, reduced API latency with Redis caching, and tuned Nginx for traffic spikes.</p></div></div>
-        <div class="job"><span class="when">2024 — 2025</span><div><h3>Platform Developer <span>· TAK Devs</span></h3>
-          <p>Built multi-stage pipelines that removed manual deployment entirely, ran Linux VPS fleets with zero-downtime releases, and shipped full-stack products.</p></div></div>
-        <div class="job"><span class="when">2023 — 2024</span><div><h3>Datacom / Network Engineer <span>· Damcon Engineering</span></h3>
-          <p>Maintained the HEC PERN education and research network across university nodes under SLA, resolving L2 and L3 faults.</p></div></div>
+      <div class="quote rv">
+        <span class="qm" aria-hidden="true">“</span>
+        <div><p>The best infrastructure is the kind nobody talks about, because it just keeps working. That's the job I want to do for your team.</p><small>— Rizwan</small></div>
       </div>
     </div>
   </section>
 
+  <!-- EXPERIENCE -->
+  <section id="experience" style="background:var(--soft)">
+    <div class="wrap xp">
+      <div class="xp-side rv">
+        <span class="eyebrow">Experience</span>
+        <h2 style="font-size:clamp(34px,4vw,54px);font-weight:800;margin-top:16px">From fiber to fleets.</h2>
+        <p style="margin-top:18px;color:var(--ink2);font-size:18px;max-width:42ch">Four roles, one direction: closer to the systems that keep everything else running.</p>
+      </div>
+      <div class="tl" id="tl">
+        <span class="fill" aria-hidden="true"></span>
+        <div class="job now rv"><span class="w">Apr 2026 – Present<span class="now-t">NOW</span></span><h3>DevOps &amp; Infrastructure Engineer · <span>Dial Edge Telecom</span></h3><p>Bare-metal Linux fleet with Ansible and systemd, hybrid Proxmox + AWS, Kubernetes with Helm, and the CI/CD and observability platforms the team ships on.</p></div>
+        <div class="job rv"><span class="w">Sep 2025 – Mar 2026</span><h3>Platform Engineer · <span>Sterlings Tech</span></h3><p>Containerized services on AWS EC2 and S3, Redis caching to cut API latency, Nginx tuned for traffic spikes, rolling Docker deploys.</p></div>
+        <div class="job rv"><span class="w">Feb 2024 – Sep 2025</span><h3>Platform Developer · <span>TAK Devs</span></h3><p>Multi-stage pipelines that removed manual deploys entirely, zero-downtime releases on Linux VPS fleets, and full-stack Angular products.</p></div>
+        <div class="job rv"><span class="w">Sep 2023 – Feb 2024</span><h3>Datacom / Network Engineer · <span>Damcon Engineering</span></h3><p>Kept the HEC PERN research network running across university nodes under SLA. L2/L3 troubleshooting, fiber, VLANs, STP.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
   <section id="products">
     <div class="wrap">
-      <div class="shead col">
-        <span class="label">Product engineering</span>
-        <h2>I also understand the applications I deploy.</h2>
-        <p>Before moving to platform work, I built and shipped full-stack products in Angular, React and Node.js. That background shapes how I design infrastructure: around how developers actually work.</p>
+      <div class="sh duo rv">
+        <div style="display:grid;gap:16px"><span class="eyebrow">Before infrastructure</span><h2>I've built the apps I now deploy.</h2></div>
+        <p>Years of shipping Angular, React and Node.js products. It's why I design platforms around how developers actually work.</p>
       </div>
       <div class="prods">
-        <article class="prod"><div class="top"><h3>Uplift Care</h3><a href="https://upliftcare.us/" target="_blank" rel="noopener">Visit ↗</a></div><p>Telehealth platform for video consultations, chat, home visits and clinic bookings.</p><p class="s">Angular 17 · Node.js · PostgreSQL · Socket.io</p></article>
-        <article class="prod"><div class="top"><h3>Regioki</h3><a href="https://www.regioki.de/" target="_blank" rel="noopener">Visit ↗</a></div><p>AI-agent platform that automates task management and operational workflows.</p><p class="s">Angular · Node.js · PostgreSQL · Docker</p></article>
-        <article class="prod"><div class="top"><h3>The Berd</h3></div><p>Construction management for bridge engineering projects, serving 120+ entities.</p><p class="s">Angular · Node.js · PostgreSQL · Stripe</p></article>
-        <article class="prod"><div class="top"><h3>Exylon</h3></div><p>Restaurant SaaS with a Canvas-rendered floor plan built to stay fast at scale.</p><p class="s">Full-stack SaaS · HTML5 Canvas</p></article>
+        <article class="prod rv"><div class="art a1"><span class="doc">Dr</span><span class="me"></span></div><div class="body"><h3>Uplift Care <a href="https://upliftcare.us/" target="_blank" rel="noopener">Visit ↗</a></h3><p>Telehealth: video consults, chat, home visits, clinic bookings.</p><p class="s">Angular 17 · Node.js · PostgreSQL</p></div></article>
+        <article class="prod rv"><div class="art a2"><div class="bars"><i style="height:40%"></i><i style="height:65%"></i><i style="height:50%"></i><i style="height:90%"></i><i style="height:70%"></i><i style="height:58%"></i></div></div><div class="body"><h3>The Berd</h3><p>Bridge engineering project and budget management for 120+ entities.</p><p class="s">Angular · Node.js · Stripe</p></div></article>
+        <article class="prod rv"><div class="art a3"><span class="row" style="top:22px"><i></i><b></b><u></u></span><span class="row" style="top:58px"><i></i><b></b><u></u></span><span class="row" style="top:94px"><i></i><b></b><u></u></span></div><div class="body"><h3>Regioki <a href="https://www.regioki.de/" target="_blank" rel="noopener">Visit ↗</a></h3><p>AI agents that automate tasks and operational workflows.</p><p class="s">Angular · Node.js · Docker</p></div></article>
+        <article class="prod rv"><div class="art a4"><span class="t" style="left:14%;top:20%;width:38px;height:38px"></span><span class="t busy" style="left:36%;top:20%;width:38px;height:38px"></span><span class="t sq" style="left:60%;top:18%;width:70px;height:34px"></span><span class="t sq busy" style="left:18%;top:60%;width:60px;height:34px"></span><span class="t" style="left:52%;top:58%;width:42px;height:42px"></span></div><div class="body"><h3>Exylon</h3><p>Restaurant SaaS with a Canvas-rendered floor plan.</p><p class="s">Full-stack SaaS · HTML5 Canvas</p></div></article>
       </div>
     </div>
   </section>
 
-  <section id="credentials">
+  <!-- NOW -->
+  <section id="now" class="mintband">
     <div class="wrap">
+      <div class="sh rv"><span class="eyebrow">Right now</span><h2>What I'm working on and learning.</h2></div>
+      <div class="nowgrid">
+        <div class="nowc rv"><span class="lbl">$ studying</span><h3>Red Hat EX280 · OpenShift</h3><p>Going deeper on OpenShift administration, operators and cluster security.</p><div class="bar"><i style="--w:65%"></i></div></div>
+        <div class="nowc rv"><span class="lbl">$ building</span><h3>ML answering-machine detection</h3><p>Telling humans from voicemail on real call audio, to replace rule-based detection in Asterisk.</p><div class="bar"><i style="--w:45%"></i></div></div>
+        <div class="nowc rv"><span class="lbl">$ curious about</span><h3>Satellite &amp; 5G NTN</h3><p>RF, DSP and non-terrestrial networks. My IEEE paper used Sentinel-2 satellite imagery, and I'm not done with space yet.</p><div class="bar"><i style="--w:25%"></i></div></div>
+      </div>
       <div class="creds">
-        <div><h3>Certifications</h3><ul>
-          <li><b>AZ-400 · DevOps Engineer Expert</b><span>Microsoft</span></li>
-          <li><b>AZ-104 · Azure Administrator</b><span>Microsoft</span></li>
-          <li><b>EX280 · OpenShift Administrator</b><span>Red Hat · in progress</span></li>
-        </ul></div>
-        <div><h3>Education</h3><ul>
-          <li><b>B.Sc. Computer Systems Engineering</b><span>UET Peshawar · 2022</span></li>
-        </ul></div>
-        <div><h3>Research</h3><ul>
-          <li><b><a href="https://www.researchgate.net/publication/390219538_Comparative_Analysis_of_Machine_Learning_Techniques_on_EuroSAT_RGB_for_Land_Use_Land_Cover_Classification" target="_blank" rel="noopener">Machine learning on EuroSAT satellite imagery</a></b><span>IEEE · land-use classification from Sentinel-2 data</span></li>
-        </ul></div>
+        <div class="cred rv"><b>AZ-400</b><span>DevOps Engineer Expert<small>Microsoft</small></span></div>
+        <div class="cred rv"><b>AZ-104</b><span>Azure Administrator<small>Microsoft</small></span></div>
+        <div class="cred y rv"><b>EX280</b><span>OpenShift Administrator<small>Red Hat · in progress</small></span></div>
+        <a class="cred d rv" href="https://www.researchgate.net/publication/390219538_Comparative_Analysis_of_Machine_Learning_Techniques_on_EuroSAT_RGB_for_Land_Use_Land_Cover_Classification" target="_blank" rel="noopener"><b>IEEE</b><span>ML on EuroSAT imagery<small>Read the paper ↗</small></span></a>
       </div>
     </div>
   </section>
 
+  <!-- CONTACT -->
   <section id="contact" class="contact">
     <div class="wrap">
-      <div class="box">
-      <span class="label">Contact</span>
-      <h2 style="margin-top:16px">Want releases that <em>feel boring?</em></h2>
-      <p class="lead">I'm open to senior DevOps and platform roles, and to consulting on infrastructure, CI/CD and observability. Email is the fastest way to reach me.</p>
-      <div class="mail"><span class="addr" id="email">rizwanzafar441@gmail.com</span><button class="copy" type="button" id="copyEmail">Copy email</button></div>
-      <div class="elsewhere">
-        <a href="https://www.linkedin.com/in/rizwan-zafar7" target="_blank" rel="noopener">LinkedIn ↗</a>
-        <a href="https://github.com/rizwan441" target="_blank" rel="noopener">GitHub ↗</a>
-        <span><span class="m">Phone / WhatsApp</span> <span id="phone">+92 320 932 3343</span></span>
-      </div>
+      <span class="eyebrow">Contact</span>
+      <h2>Let's make your releases boring.</h2>
+      <p class="lead">Hiring for a DevOps or platform role, or need help with Kubernetes, CI/CD or monitoring? Send me a note. I read every email and reply personally.</p>
+      <div class="mailrow"><a class="mail" href="mailto:rizwanzafar441@gmail.com" id="mail">rizwanzafar441@gmail.com</a><button class="copy" type="button" id="copy">Copy email</button></div>
+      <div class="links">
+        <a href="https://www.linkedin.com/in/rizwan-zafar7" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.01 5 2.5 2.5 0 01.01-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21H9z"/></svg>LinkedIn</a>
+        <a href="https://github.com/rizwan441" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 .5a11.5 11.5 0 00-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 015.8 0C17.3 4.9 18.3 5.2 18.3 5.2c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0012 .5z"/></svg>GitHub</a>
+        <a href="https://wa.me/923209323343" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.8-2.2 1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.7-.1 1.2z"/></svg>WhatsApp</a>
       </div>
     </div>
   </section>
 </main>
-<footer><div class="wrap"><span>© 2026 Rizwan Zafar</span><span>Designed and built by hand. Press <span class="mono" id="kfoot">⌘K</span> to navigate.</span></div></footer>
 
-<div class="cmdk-back" id="cmdk" hidden>
-  <div class="cmdk" role="dialog" aria-modal="true" aria-label="Command menu">
-    <input id="kq" type="text" placeholder="Type a command or search…" autocomplete="off" spellcheck="false" aria-controls="klist">
-    <ul id="klist" role="listbox"></ul>
-    <div class="foot"><span>↑↓ navigate</span><span>↵ select</span><span>esc close</span></div>
-  </div>
-</div>
+<footer><div class="wrap"><span>© 2026 Rizwan Zafar · built by hand, no templates</span><span><b>$</b> exit 0</span></div></footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
-  var root=document.documentElement;
-  function getS(k){try{return localStorage.getItem(k)}catch(e){return null}}
-  function setS(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-  var saved=getS('theme'); if(saved==='dark'||saved==='light') root.setAttribute('data-theme',saved);
-  function isDark(){var t=root.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}
-  function toggleTheme(){var n=isDark()?'light':'dark';root.setAttribute('data-theme',n);setS('theme',n);toast(n==='dark'?'Dark theme':'Light theme')}
-  document.getElementById('theme').addEventListener('click',toggleTheme);
-
-  var hdr=document.getElementById('hdr');
-  addEventListener('scroll',function(){hdr.classList.toggle('scrolled',scrollY>8)},{passive:true});
-
-  var mac=/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent);
-  if(!mac){document.getElementById('kkey').textContent='Ctrl K';document.getElementById('kfoot').textContent='Ctrl K'}
-
-  var tEl=document.getElementById('toast'),tT;
-  function toast(m){tEl.textContent=m;tEl.classList.add('show');clearTimeout(tT);tT=setTimeout(function(){tEl.classList.remove('show')},1600)}
-  function copy(text,label,id){
-    function sel(){var el=document.getElementById(id);var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);toast('Selected. Press '+(mac?'⌘':'Ctrl')+'+C to copy')}
-    try{navigator.clipboard.writeText(text).then(function(){toast(label+' copied')},sel)}catch(e){sel()}
-  }
-  var btn=document.getElementById('copyEmail');
-  btn.addEventListener('click',function(){copy('rizwanzafar441@gmail.com','Email','email');btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy email'},1600)});
-
-
-  /* canary simulation */
-  (function(){
-    var box=document.getElementById('canary'); if(!box) return;
-    var st=document.getElementById('cStable'),cn=document.getElementById('cCan'),sp=document.getElementById('cStablePct'),cp=document.getElementById('cCanPct');
-    var steps=[].slice.call(document.querySelectorAll('#cSteps span')),T=document.getElementById('cStatusT'),btn=document.getElementById('simBad');
-    var gE=document.getElementById('gErr'),gL=document.getElementById('gLat'),gR=document.getElementById('gRes');
-    var lv=[5,25,50,100],i=1,bad=false,timer=null;
-    function set(p){st.style.flexBasis=(100-p)+'%';cn.style.flexBasis=p+'%';cn.textContent=p>=8?p+'%':'';sp.textContent=(100-p)+'%';cp.textContent=p+'%'}
-    function rnd(a,b){return a+Math.random()*(b-a)}
-    function healthy(){gE.textContent=rnd(.08,.22).toFixed(2)+'%';gL.textContent=Math.round(rnd(160,210))+' ms';gR.textContent='0';[gE,gL,gR].forEach(function(g){g.classList.remove('badv')})}
-    function paint(){steps.forEach(function(s,k){s.className=k<i?'done':(k===i?'on':'')})}
-    function tick(){
-      if(bad) return;
-      i++; if(i>=lv.length){i=0}
-      set(lv[i]);paint();healthy();
-      T.textContent=lv[i]===100?'Promoted · v2.4.1 is now stable':'Healthy · '+(i<lv.length-1?'promoting to '+lv[i+1]+'% next':'final check');
-    }
-    function simulate(){
-      if(bad) return; bad=true;btn.disabled=true;box.classList.add('bad');
-      if(lv[i]===100||lv[i]===5){i=1;set(25);paint()}
-      gE.textContent='4.80%';gL.textContent='912 ms';gR.textContent='3';[gE,gL,gR].forEach(function(g){g.classList.add('badv')});
-      T.textContent='Gate failed · error rate 4.8% > 1.0% · rolling back';
-      setTimeout(function(){set(0);steps.forEach(function(s){s.className=''});T.textContent='Rolled back automatically · 100% on stable v2.4.0'},1100);
-      setTimeout(function(){bad=false;btn.disabled=false;box.classList.remove('bad');i=0;set(5);paint();healthy();T.textContent='New build v2.4.2 · starting canary at 5%'},5200);
-    }
-    btn.addEventListener('click',simulate);
-    if(!matchMedia('(prefers-reduced-motion: reduce)').matches) timer=setInterval(tick,2600);
-  })();
-
-  var back=document.getElementById('cmdk'),q=document.getElementById('kq'),list=document.getElementById('klist'),idx=0,shown=[],lastFocus=null;
+  document.documentElement.classList.add('js');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function go(id){return function(){document.getElementById(id).scrollIntoView({behavior:reduce?'auto':'smooth'})}}
-  function open(url){return function(){var a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}}
-  var items=[
-    {t:'Selected work',k:'Go to',f:go('work')},
-    {t:'How I ship (GitOps & canary)',k:'Go to',f:go('delivery')},
-    {t:'Capabilities',k:'Go to',f:go('capabilities')},
-    {t:'Experience',k:'Go to',f:go('experience')},
-    {t:'Product engineering',k:'Go to',f:go('products')},
-    {t:'Certifications & research',k:'Go to',f:go('credentials')},
-    {t:'Contact',k:'Go to',f:go('contact')},
-    {t:'Copy email address',k:'Action',f:function(){copy('rizwanzafar441@gmail.com','Email','email')}},
-    {t:'Copy phone number',k:'Action',f:function(){copy('+92 320 932 3343','Phone number','phone')}},
-    {t:'Open LinkedIn',k:'Link',f:open('https://www.linkedin.com/in/rizwan-zafar7')},
-    {t:'Open GitHub',k:'Link',f:open('https://github.com/rizwan441')},
-    {t:'Toggle light / dark theme',k:'Action',f:toggleTheme}
+  var nav=document.getElementById('nav'),tl=document.getElementById('tl');
+  function onScroll(){nav.classList.toggle('scrolled',scrollY>10);var r=tl.getBoundingClientRect();tl.style.setProperty('--tp',Math.max(0,Math.min(1,(innerHeight*.65-r.top)/r.height)))}
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+  /* reveal */
+  var rv=document.querySelectorAll('.rv');
+  if('IntersectionObserver' in window&&!reduce){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -6% 0px'});rv.forEach(function(el){io.observe(el)})}else rv.forEach(function(el){el.classList.add('in')});
+
+  /* counters */
+  document.querySelectorAll('[data-n]').forEach(function(el){
+    if(reduce||!('IntersectionObserver' in window))return;var n=+el.dataset.n,d=+(el.dataset.d||0),s=el.dataset.s||'',done=false;
+    var o=new IntersectionObserver(function(es){if(es[0].isIntersecting&&!done){done=true;o.disconnect();var t0=performance.now();(function f(t){var k=Math.min(1,(t-t0)/1500),e=1-Math.pow(1-k,3);el.textContent=(n*e).toFixed(d)+s;if(k<1)requestAnimationFrame(f)})(t0)}},{threshold:.6});o.observe(el)});
+
+  /* uptime */
+  var up=document.getElementById('up'),start=new Date('2023-09-01T09:00:00+05:00');
+  function upd(){var ms=Date.now()-start,d=Math.floor(ms/864e5),y=Math.floor(d/365);up.textContent=y+'y '+(d-y*365)+'d'}upd();
+
+  /* typing terminal */
+  var T=document.getElementById('term');
+  var script=[
+    ['c','ssh rizwan@prod-01'],
+    ['o','<span class="d">Welcome to Ubuntu 24.04 LTS · last login from 10.0.4.12</span>'],
+    ['c','uptime'],
+    ['o',' 09:41:07 up 184 days,  3:12,  1 user,  load average: <span class="ok">0.42</span>, 0.38, 0.35'],
+    ['c','kubectl get nodes'],
+    ['o','<span class="d">NAME        STATUS   ROLES           AGE   VERSION</span>\nk8s-cp-01   <span class="ok">Ready</span>    control-plane   212d  v1.30.2\nk8s-wk-01   <span class="ok">Ready</span>    worker          212d  v1.30.2\nk8s-wk-02   <span class="ok">Ready</span>    worker          198d  v1.30.2'],
+    ['c','helm upgrade --install api ./charts/api --atomic --wait'],
+    ['o','Release "api" has been upgraded. Happy Helming!\n<span class="d">REVISION:</span> 42   <span class="d">STATUS:</span> <span class="ok">deployed</span>'],
+    ['c','argocd app get api --refresh | grep -E "Health|Sync"'],
+    ['o','Health Status:  <span class="ok">Healthy</span>\nSync Status:    <span class="ok">Synced</span> to main (a3f9c1e)'],
+    ['c','curl -s localhost:9090/-/healthy'],
+    ['o','<span class="ok">Prometheus Server is Healthy.</span>'],
+    ['c','echo "all green. back to chai."'],
+    ['o','<span class="h">all green. back to chai.</span>']
   ];
-  function render(){
-    var v=q.value.trim().toLowerCase();
-    shown=items.filter(function(i){return !v||i.t.toLowerCase().indexOf(v)>-1||i.k.toLowerCase().indexOf(v)>-1});
-    if(idx>=shown.length)idx=0;
-    list.innerHTML=shown.length?shown.map(function(i,n){return '<li role="option" id="ko'+n+'" aria-selected="'+(n===idx)+'" data-n="'+n+'">'+i.t+'<span>'+i.k+'</span></li>'}).join(''):'<li aria-disabled="true">No matches. Try “contact” or “github”.</li>';
-    q.setAttribute('aria-activedescendant',shown.length?'ko'+idx:'');
-    var cur=document.getElementById('ko'+idx); if(cur) cur.scrollIntoView({block:'nearest'});
+  var prompt='<span class="p">rizwan@prod-01</span>:<span class="b">~</span>$ ';
+  function staticRender(){T.innerHTML=script.map(function(s){return s[0]==='c'?prompt+s[1]:s[1]}).slice(-12).join('\n')+'\n'+prompt+'<span class="cursor"></span>'}
+  if(reduce){staticRender()}else{
+    var html='',i=0;
+    function trim(){while(T.scrollHeight>T.clientHeight+2&&html.indexOf('\n')>-1){html=html.slice(html.indexOf('\n')+1);T.innerHTML=html+'<span class="cursor"></span>'}}
+    function next(){
+      if(i>=script.length){setTimeout(function(){html='';i=0;T.innerHTML='';next()},3500);return}
+      var s=script[i++];
+      if(s[0]==='c'){html+=prompt;var k=0;(function type(){if(k<=s[1].length){T.innerHTML=html+s[1].slice(0,k)+'<span class="cursor"></span>';k++;setTimeout(type,28+Math.random()*55)}else{html+=s[1]+'\n';trim();setTimeout(next,320)}})()}
+      else{html+=s[1]+'\n';T.innerHTML=html+'<span class="cursor"></span>';trim();setTimeout(next,700)}
+    }
+    if('IntersectionObserver' in window){var started=false;new IntersectionObserver(function(es){if(es[0].isIntersecting&&!started){started=true;next()}}).observe(T)}else next();
   }
-  function openK(){lastFocus=document.activeElement;back.hidden=false;q.value='';idx=0;render();q.focus()}
-  function closeK(){back.hidden=true;if(lastFocus&&lastFocus.focus)lastFocus.focus({preventScroll:true})}
-  function pick(n){var i=shown[n];if(!i)return;closeK();setTimeout(i.f,30)}
-  document.getElementById('kopen').addEventListener('click',openK);
-  addEventListener('keydown',function(e){
-    if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();back.hidden?openK():closeK();return}
-    if(back.hidden)return;
-    if(e.key==='Escape'){e.preventDefault();closeK()}
-    else if(e.key==='ArrowDown'&&shown.length){e.preventDefault();idx=(idx+1)%shown.length;render()}
-    else if(e.key==='ArrowUp'&&shown.length){e.preventDefault();idx=(idx-1+shown.length)%shown.length;render()}
-    else if(e.key==='Enter'){e.preventDefault();pick(idx)}
+
+  /* flow highlight */
+  var fs=[].slice.call(document.querySelectorAll('#flow .fs')),fi=0;
+  if(!reduce)setInterval(function(){fs.forEach(function(f,k){f.classList.toggle('on',k===fi)});fi=(fi+1)%fs.length},1400);
+
+  /* canary */
+  var box=document.getElementById('canary'),cS=document.getElementById('cS'),cC=document.getElementById('cC'),cSP=document.getElementById('cSP'),cCP=document.getElementById('cCP'),
+      pills=[].slice.call(document.querySelectorAll('#cP span')),cT=document.getElementById('cT'),gE=document.getElementById('gE'),gL=document.getElementById('gL'),gR=document.getElementById('gR'),sim=document.getElementById('sim');
+  var lv=[5,25,50,100],ci=1,bad=false;
+  function set(p){cS.style.flexBasis=(100-p)+'%';cC.style.flexBasis=p+'%';cC.textContent=p>=8?p+'%':'';cSP.textContent=(100-p)+'%';cCP.textContent=p+'%'}
+  function paint(){pills.forEach(function(s,k){s.className=k<ci?'done':(k===ci?'on':'')})}
+  function r(a,b){return a+Math.random()*(b-a)}
+  function healthy(){gE.textContent=r(.08,.22).toFixed(2)+'%';gL.textContent=Math.round(r(160,210))+' ms';gR.textContent='0';[gE,gL,gR].forEach(function(g){g.classList.remove('bad')})}
+  function tick(){if(bad)return;ci=(ci+1)%lv.length;set(lv[ci]);paint();healthy();cT.textContent=lv[ci]===100?'Promoted · v2.4.1 is now stable':'Healthy · promoting to '+lv[ci+1]+'% next'}
+  sim.addEventListener('click',function(){
+    if(bad)return;bad=true;sim.disabled=true;box.classList.add('bad');
+    if(lv[ci]===100||lv[ci]===5){ci=1;set(25);paint()}
+    gE.textContent='4.80%';gL.textContent='912 ms';gR.textContent='3';[gE,gL,gR].forEach(function(g){g.classList.add('bad')});
+    cT.textContent='Gate failed · errors 4.8% > 1.0% · rolling back';
+    setTimeout(function(){set(0);pills.forEach(function(s){s.className=''});cT.textContent='Rolled back automatically · 100% on stable v2.4.0'},1100);
+    setTimeout(function(){bad=false;sim.disabled=false;box.classList.remove('bad');ci=0;set(5);paint();healthy();cT.textContent='New build v2.4.2 · starting canary at 5%'},5200);
   });
-  q.addEventListener('input',function(){idx=0;render()});
-  list.addEventListener('click',function(e){var li=e.target.closest('li[data-n]');if(li)pick(+li.dataset.n)});
-  list.addEventListener('mousemove',function(e){var li=e.target.closest('li[data-n]');if(li&&+li.dataset.n!==idx){idx=+li.dataset.n;render()}});
-  back.addEventListener('click',function(e){if(e.target===back)closeK()});
+  if(!reduce)setInterval(tick,2600);
+
+  /* copy */
+  var toast=document.getElementById('toast'),tt;
+  function show(m){toast.textContent=m;toast.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show')},1700)}
+  document.getElementById('copy').addEventListener('click',function(){var b=this;
+    function ok(){b.textContent='Copied ✓';show('Email copied');setTimeout(function(){b.textContent='Copy email'},1700)}
+    function fb(){var el=document.getElementById('mail'),rg=document.createRange();rg.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(rg);show('Selected, press Ctrl+C to copy')}
+    try{navigator.clipboard.writeText('rizwanzafar441@gmail.com').then(ok,fb)}catch(e){fb()}});
 })();
 </script>
-</body></html>
+</body>
+</html>
