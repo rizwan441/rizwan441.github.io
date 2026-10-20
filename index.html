@@ -335,6 +335,35 @@ footer{background:var(--ink);color:#9AA5AE}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-block:26px;font-family:var(--mono);font-size:13px}
 footer b{color:#7FD1B0;font-weight:500}
 
+
+
+/* contact form */
+.cgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:clamp(32px,5vw,80px);align-items:center}
+@media (max-width:1000px){.cgrid{grid-template-columns:minmax(0,1fr)}}
+.cform{position:relative;background:#fff;color:var(--ink);border-radius:24px;padding:clamp(24px,3vw,40px);display:grid;gap:16px;box-shadow:0 40px 80px -40px rgba(10,30,24,.6)}
+.cform h3{font-size:26px;font-weight:800}
+.fhint{font-size:15px;color:var(--muted);margin-top:-8px}
+.frow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:560px){.frow{grid-template-columns:minmax(0,1fr)}}
+.cform label{display:grid;gap:7px;font-size:14px;font-weight:700;color:var(--ink2)}
+.cform input,.cform select,.cform textarea{width:100%;font-family:var(--f);font-size:16px;color:var(--ink);background:var(--soft);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;transition:border-color .2s,box-shadow .2s,background .2s;resize:vertical}
+.cform input:focus,.cform select:focus,.cform textarea:focus{outline:0;border-color:var(--green);background:#fff;box-shadow:0 0 0 4px rgba(63,138,115,.15)}
+.cform input:user-invalid,.cform textarea:user-invalid{border-color:var(--red)}
+.cform .hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
+.fsend{justify-self:start;margin-top:4px}
+.fsend[disabled]{opacity:.7;cursor:wait}
+.fnote{font-size:12.5px;color:var(--muted)}
+.sent{display:flex;gap:12px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--mint);color:var(--green-dd);font-weight:700;font-size:15px}
+/* whatsapp float */
+.wa{position:fixed;right:max(20px,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom));z-index:80;display:flex;align-items:center;gap:0;height:58px;min-width:58px;padding:0 17px;border-radius:999px;background:#25D366;color:#fff;text-decoration:none;font-weight:800;font-size:15px;box-shadow:0 14px 30px -10px rgba(37,211,102,.7);transition:gap .3s,padding .3s,transform .2s;overflow:hidden}
+.wa svg{width:26px;height:26px;fill:#fff;flex:none}
+.wa span{max-width:0;white-space:nowrap;overflow:hidden;transition:max-width .35s}
+.wa:hover{gap:10px;padding-right:22px;transform:translateY(-2px)}
+.wa:hover span{max-width:180px}
+.wa::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 0 rgba(37,211,102,.6);animation:wap 2.6s infinite}
+@keyframes wap{0%{box-shadow:0 0 0 0 rgba(37,211,102,.55)}70%{box-shadow:0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+.toast{bottom:96px}
+
 /* reveal (transform only, content always visible) */
 .rv{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
 .js .rv:not(.in){transform:translateY(32px)}
@@ -616,7 +645,8 @@ footer b{color:#7FD1B0;font-weight:500}
 
   <!-- CONTACT -->
   <section id="contact" class="contact">
-    <div class="wrap">
+    <div class="wrap cgrid">
+      <div>
       <span class="eyebrow">Contact</span>
       <h2>Let's make your releases boring.</h2>
       <p class="lead">Hiring for a DevOps or platform role, or need help with Kubernetes, CI/CD or monitoring? Send me a note. I read every email and reply personally.</p>
@@ -626,11 +656,38 @@ footer b{color:#7FD1B0;font-weight:500}
         <a href="https://github.com/rizwan441" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 .5a11.5 11.5 0 00-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 015.8 0C17.3 4.9 18.3 5.2 18.3 5.2c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0012 .5z"/></svg>GitHub</a>
         <a href="https://wa.me/923209323343" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.8-2.2 1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.7-.1 1.2z"/></svg>WhatsApp</a>
       </div>
+      </div>
+
+      <form class="cform" id="cform" action="https://formsubmit.co/rizwanzafar441@gmail.com" method="POST">
+        <h3>Send a message</h3>
+        <p class="fhint">Goes straight to my inbox. I reply personally.</p>
+        <input type="hidden" name="_subject" value="New message from rizwan441.github.io">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="true">
+        <input type="hidden" name="_next" value="https://rizwan441.github.io/?sent=1#contact">
+        <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="frow">
+          <label for="f-name">Your name<input id="f-name" name="name" type="text" required maxlength="80" autocomplete="name" placeholder="Jane Smith"></label>
+          <label for="f-email">Email<input id="f-email" name="email" type="email" required maxlength="120" autocomplete="email" placeholder="jane@company.com"></label>
+        </div>
+        <label for="f-topic">What is it about?
+          <select id="f-topic" name="topic" required>
+            <option value="Hiring / full-time role">Hiring / full-time role</option>
+            <option value="Consulting / project">Consulting / project</option>
+            <option value="Kubernetes or CI/CD help">Kubernetes or CI/CD help</option>
+            <option value="Just saying hi">Just saying hi</option>
+          </select>
+        </label>
+        <label for="f-msg">Message<textarea id="f-msg" name="message" required minlength="10" maxlength="3000" rows="5" placeholder="A few lines about the role, project or problem."></textarea></label>
+        <button class="btn btn-yellow fsend" type="submit" id="fsend">Send message <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <p class="fnote">Protected by reCAPTCHA and a spam trap. Your details are only used to reply to you.</p>
+      </form>
     </div>
   </section>
 </main>
 
 <footer><div class="wrap"><span>© 2026 Rizwan Zafar · built by hand, no templates</span><span><b>$</b> exit 0</span></div></footer>
+<a class="wa" href="https://wa.me/923209323343?text=Hi%20Rizwan%2C%20I%20found%20your%20portfolio%20and%20would%20like%20to%20talk." target="_blank" rel="noopener" aria-label="Chat with Rizwan on WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.8-2.2 1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.7-.1 1.2z"/></svg><span>Chat on WhatsApp</span></a>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -716,6 +773,20 @@ footer b{color:#7FD1B0;font-weight:500}
     function ok(){b.textContent='Copied ✓';show('Email copied');setTimeout(function(){b.textContent='Copy email'},1700)}
     function fb(){var el=document.getElementById('mail'),rg=document.createRange();rg.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(rg);show('Selected, press Ctrl+C to copy')}
     try{navigator.clipboard.writeText('rizwanzafar441@gmail.com').then(ok,fb)}catch(e){fb()}});
+
+  /* contact form */
+  var form=document.getElementById('cform'),send=document.getElementById('fsend');
+  form.addEventListener('submit',function(e){
+    if(form.querySelector('.hp').value){e.preventDefault();return}
+    if(!form.checkValidity()){e.preventDefault();form.reportValidity();return}
+    send.disabled=true;send.firstChild.textContent='Sending… ';
+  });
+  if(/[?&]sent=1/.test(location.search)){
+    var d=document.createElement('div');d.className='sent';d.setAttribute('role','status');d.textContent='✓ Thanks! Your message is in my inbox. I will reply soon.';
+    form.insertBefore(d,form.querySelector('h3').nextSibling.nextSibling);
+    setTimeout(function(){show('Message sent. Thank you!')},400);
+    try{history.replaceState(null,'',location.pathname+'#contact')}catch(e){}
+  }
 })();
 </script>
 </body>
