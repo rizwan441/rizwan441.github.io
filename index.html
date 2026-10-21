@@ -179,6 +179,9 @@ code{font-family:var(--mono);font-size:.85em;background:var(--mint);color:var(--
 .dg-l.hot{stroke:var(--green);stroke-width:2;stroke-dasharray:5 5;animation:flow 1s linear infinite}
 @keyframes flow{to{stroke-dashoffset:-20}}
 .dg-a{fill:#AFC2BB}.dg-a.hot{fill:var(--green)}
+.fleet-term{background:var(--night);border-radius:18px;overflow-x:auto;box-shadow:0 30px 60px -36px rgba(18,21,25,.55)}
+.fleet-term pre{margin:0;padding:22px 24px;font-family:var(--mono);font-size:13px;line-height:1.8;color:#D7DEE4}
+.fleet-term .g{color:#4ADE80}.fleet-term .b{color:#93C5FD}.fleet-term .rd{color:#FF8A8E}.fleet-term .d{color:#7C8792}.fleet-term .w{color:#fff;font-weight:700}
 .more{margin-top:24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 @media (max-width:980px){.more{grid-template-columns:minmax(0,1fr)}}
 .mini{background:rgba(255,255,255,.7);border:1px solid var(--mint2);border-radius:18px;padding:22px;display:grid;gap:8px;align-content:start}
@@ -511,6 +514,29 @@ footer b{color:#7FD1B0;font-weight:500}
               <path class="dg-l" d="M420,104 V150" marker-end="url(#ar)"/>
               <path class="dg-l" d="M580,150 V96" marker-end="url(#ar)" stroke-dasharray="3 3"/>
             </svg>
+          </div>
+        </article>
+
+        <article class="case wide rv fleet">
+          <div style="display:grid;gap:18px">
+            <div class="tagrow"><span class="tag">System design · Automation</span><span class="state">Case study</span></div>
+            <h3>Fleet Orchestrator</h3>
+            <div class="big">120+<small>production servers, operated in parallel from one screen</small></div>
+            <p>An agentless Rust service that runs operations across ~20 telecom clusters over SSH. Every server gets a <b>specific result with a reason</b>, and reboots are <b>verified by a changed kernel boot ID</b>, not just "it answers again".</p>
+            <div class="chips"><span>Rust</span><span>Axum</span><span>Tokio</span><span>WebSockets</span><span>React</span><span>SSH</span></div>
+            <a class="btn btn-green" style="justify-self:start" href="/case-studies/fleet-orchestrator/">Read the case study <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+          <div class="fleet-term" aria-label="Example job summary">
+<pre><span class="w">REBOOTING 6 target(s)</span> <span class="d">· max 20 parallel</span>
+<span class="b">[10.0.4.11]</span> Boot ID recorded.
+<span class="b">[10.0.4.11]</span> Down (expected). Waiting...
+<span class="b">[10.0.4.11]</span> <span class="g">Back with a new boot ID.</span>
+
+<span class="d">========== SUMMARY ==========</span>
+<span class="b">REBOOTED (3)</span>     30s · 41s · 38s downtime
+<span class="rd">UNREACHABLE (1)</span>  connection timed out
+<span class="rd">AUTH_FAILED (1)</span>  login rejected
+<span class="d">SKIPPED (1)</span>      maintenance mode</pre>
           </div>
         </article>
 
