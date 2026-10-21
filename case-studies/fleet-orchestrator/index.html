@@ -3,11 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Fleet Orchestrator · Case study · Rizwan Zafar</title>
+<title>Fleet Orchestrator: Automating 120+ Servers in Rust · Case Study by Rizwan Zafar</title>
 <meta name="description" content="Case study: designing an agentless automation system in Rust that runs operations on 120+ production servers in parallel and reports exactly what happened on each one.">
 <meta property="og:title" content="Fleet Orchestrator · a case study by Rizwan Zafar">
 <meta property="og:description" content="Running operations on 120+ production servers in parallel, with verified reboots and a specific result for every server.">
-<meta property="og:image" content="https://github.com/rizwan441.png">
+<meta property="og:image" content="https://rizwan441.github.io/og-fleet.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://rizwan441.github.io/case-studies/fleet-orchestrator/">
+<meta property="og:site_name" content="Rizwan Zafar">
+<meta property="article:author" content="https://rizwan441.github.io/">
+<meta name="author" content="Rizwan Zafar">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fleet Orchestrator · a case study by Rizwan Zafar">
+<meta name="twitter:description" content="Running operations on 120+ production servers in parallel, with verified reboots and a specific result for every server.">
+<meta name="twitter:image" content="https://rizwan441.github.io/og-fleet.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"TechArticle","headline":"Fleet Orchestrator: running operations on 120+ production servers in parallel","description":"Case study: an agentless Rust automation system with per-server state machines, failure classification and boot-ID-verified reboots.","image":"https://rizwan441.github.io/og-fleet.png","author":{"@type":"Person","name":"Rizwan Zafar","url":"https://rizwan441.github.io/"},"publisher":{"@type":"Person","name":"Rizwan Zafar","url":"https://rizwan441.github.io/"},"datePublished":"2026-10-21","dateModified":"2026-10-21","mainEntityOfPage":"https://rizwan441.github.io/case-studies/fleet-orchestrator/","keywords":"DevOps, Rust, SSH, fleet automation, Site Reliability Engineering, Axum, Tokio, telecom infrastructure","inLanguage":"en"},
+{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Rizwan Zafar","item":"https://rizwan441.github.io/"},{"@type":"ListItem","position":2,"name":"Case studies","item":"https://rizwan441.github.io/#work"},{"@type":"ListItem","position":3,"name":"Fleet Orchestrator","item":"https://rizwan441.github.io/case-studies/fleet-orchestrator/"}]}
+]}
+</script>
 <meta property="og:type" content="article">
 <link rel="canonical" href="https://rizwan441.github.io/case-studies/fleet-orchestrator/">
 <meta name="theme-color" content="#3F8A73">
@@ -492,7 +509,7 @@ $ cat /proc/sys/kernel/random/boot_id
           <div class="nx rv"><b>Key-based access</b><p>Replace passwords with SSH keys and verify host keys properly.</p></div>
           <div class="nx rv"><b>Horizontal scale</b><p>Move jobs onto a queue so several workers can share the load.</p></div>
         </div>
-        <p class="note">Built for a telecom infrastructure team. Customer details, addresses and credentials are left out of this case study.</p>
+        <p class="note">Also published on <a href="https://medium.com/@rizwanzafar_79035/how-do-you-prove-a-server-actually-rebooted-46752b5710a3" target="_blank" rel="noopener">Medium</a>. Built for a telecom infrastructure team. Customer details, addresses and credentials are left out of this case study.</p>
       </section>
     </article>
   </div>
