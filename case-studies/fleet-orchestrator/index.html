@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fleet Orchestrator · Case study · Rizwan Zafar</title>
+<meta name="description" content="Case study: designing an agentless automation system in Rust that runs operations on 120+ production servers in parallel and reports exactly what happened on each one.">
+<meta property="og:title" content="Fleet Orchestrator · a case study by Rizwan Zafar">
+<meta property="og:description" content="Running operations on 120+ production servers in parallel, with verified reboots and a specific result for every server.">
+<meta property="og:image" content="https://github.com/rizwan441.png">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://rizwan441.github.io/case-studies/fleet-orchestrator/">
+<meta name="theme-color" content="#3F8A73">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%233F8A73'/%3E%3Ctext x='16' y='21.5' font-family='Arial' font-weight='800' font-size='14' fill='white' text-anchor='middle'%3Erz%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+:root{
+  --green:#3F8A73; --green-d:#2F6F5C; --green-dd:#1F4D40; --mint:#EAF4F0; --mint2:#D6EBE3;
+  --yellow:#F6C343; --yellow-soft:#FFF4D6; --red:#E5484D; --red-soft:#FDECEC; --blue:#3B82F6; --blue-soft:#E8F0FE; --gray-soft:#EEF1F0;
+  --ink:#121519; --ink2:#3B4248; --muted:#6C757D; --line:#E4E9E7; --bg:#FFFFFF; --soft:#F7FAF9;
+  --night:#121519; --night2:#1B2025; --night3:#262C33; --nline:#2F363E; --nmuted:#9AA5AE;
+  --f:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --pad:clamp(20px,4vw,64px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--green-d)}
+h1,h2,h3,h4{margin:0;line-height:1.12;letter-spacing:-.025em;text-wrap:balance}
+p{margin:0}
+:focus-visible{outline:2px solid var(--yellow);outline-offset:3px;border-radius:6px}
+::selection{background:var(--yellow);color:var(--ink)}
+.wrap{max-width:1600px;margin:0 auto;padding-left:max(var(--pad),env(safe-area-inset-left));padding-right:max(var(--pad),env(safe-area-inset-right))}
+.read{max-width:820px}
+.mono{font-family:var(--mono)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+.eyebrow::before{content:"";width:22px;height:2px;background:currentColor;border-radius:2px}
+.mark{background:linear-gradient(transparent 58%,var(--yellow) 58%,var(--yellow) 90%,transparent 90%);padding:0 .08em}
+code{font-family:var(--mono);font-size:.86em;background:var(--mint);color:var(--green-dd);padding:2px 7px;border-radius:6px}
+
+/* nav + progress */
+.progress{position:fixed;top:0;left:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(var(--p,0));background:linear-gradient(90deg,var(--green),var(--yellow));z-index:60}
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:24px;height:70px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font-weight:800;font-size:17px;letter-spacing:-.02em;margin-right:auto}
+.logo b{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:var(--green);color:#fff;font-size:15px}
+.back{font-weight:700;font-size:15px;color:var(--ink2);text-decoration:none}
+.back:hover{color:var(--green)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:46px;padding:0 20px;border-radius:12px;font-family:var(--f);font-weight:700;font-size:15px;text-decoration:none;border:0;cursor:pointer;transition:transform .2s,background .2s}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-d);transform:translateY(-2px)}
+.btn-yellow{background:var(--yellow);color:var(--ink)}
+.btn-yellow:hover{transform:translateY(-2px)}
+@media (max-width:640px){.nav .btn{display:none}}
+
+/* hero */
+.hero{background:radial-gradient(1100px 520px at 90% 0%,var(--mint) 0%,transparent 62%),var(--bg);padding-block:clamp(48px,7vw,96px) clamp(40px,5vw,72px)}
+.hero h1{font-size:clamp(44px,6.4vw,92px);font-weight:800;letter-spacing:-.045em;line-height:1;margin-top:20px}
+.hero .lede{margin-top:24px;font-size:clamp(18px,1.6vw,22px);color:var(--ink2);max-width:62ch;line-height:1.55}
+.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-top:44px}
+@media (max-width:860px){.meta{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.meta div{background:#fff;padding:20px 22px}
+.meta dt{font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.meta dd{margin:6px 0 0;font-size:17px;font-weight:700}
+
+/* layout: sticky toc + content */
+.layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:clamp(32px,5vw,80px);padding-block:clamp(48px,6vw,88px)}
+@media (max-width:1060px){.layout{grid-template-columns:minmax(0,1fr)}.toc{display:none}}
+.toc{position:sticky;top:96px;align-self:start;display:grid;gap:2px;font-size:14.5px}
+.toc span{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.toc a{display:flex;gap:10px;padding:7px 12px;border-radius:9px;text-decoration:none;color:var(--ink2);font-weight:600;border-left:2px solid transparent;transition:all .2s}
+.toc a i{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--muted);padding-top:2px}
+.toc a:hover{background:var(--soft)}
+.toc a.on{background:var(--mint);color:var(--green-dd);border-left-color:var(--green)}
+.toc a.on i{color:var(--green)}
+
+.sec{padding-bottom:clamp(56px,7vw,96px)}
+.sec>.num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--green)}
+.sec h2{font-size:clamp(30px,3.4vw,46px);font-weight:800;margin-top:10px}
+.sec .intro{margin-top:18px;font-size:18.5px;color:var(--ink2);max-width:70ch}
+.sec .intro+.intro{margin-top:14px}
+.why{margin-top:14px;padding:12px 16px;border-radius:12px;background:var(--yellow-soft);font-size:15.5px;color:#5C4300}
+.why b{color:#3D2C00}
+
+/* pain cards */
+.pains{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:32px}
+@media (max-width:760px){.pains{grid-template-columns:minmax(0,1fr)}}
+.pain{border:1px solid var(--line);border-radius:18px;padding:22px 24px;background:var(--soft);display:grid;gap:8px;transition:transform .3s,box-shadow .3s}
+.pain:hover{transform:translateY(-4px);box-shadow:0 24px 40px -30px rgba(18,21,25,.4)}
+.pain h3{font-size:18px;font-weight:800;display:flex;align-items:center;gap:10px}
+.pain h3::before{content:"!";display:grid;place-items:center;width:26px;height:26px;border-radius:8px;background:var(--red-soft);color:var(--red);font-size:14px;font-weight:800;flex:none}
+.pain p{font-size:15.5px;color:var(--ink2)}
+
+/* requirements */
+.reqs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:32px}
+@media (max-width:760px){.reqs{grid-template-columns:minmax(0,1fr)}}
+.req{border-radius:20px;padding:26px;display:grid;gap:14px;align-content:start}
+.req.f{background:var(--mint)}.req.n{background:var(--night);color:#E8EDF1}
+.req h3{font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.req.f h3{color:var(--green-dd)}.req.n h3{color:var(--yellow)}
+.req ul{margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:15.5px}
+.req li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px}
+.req.f li::before{content:"✓";color:var(--green);font-weight:800}
+.req.n li::before{content:"→";color:var(--yellow);font-weight:800}
+.req.n b{color:#fff}
+
+/* architecture */
+.arch{margin-top:32px;background:var(--soft);border:1px solid var(--line);border-radius:22px;padding:clamp(16px,2.4vw,28px);overflow-x:auto}
+.arch svg{display:block;width:100%;min-width:720px;height:auto}
+.a-box{fill:#fff;stroke:#C9D6D1;stroke-width:1.4}
+.a-core{fill:var(--mint);stroke:var(--green);stroke-width:2}
+.a-h{fill:var(--ink);font-family:var(--f);font-weight:800;font-size:15px}
+.a-t{fill:var(--ink2);font-family:var(--f);font-size:12.5px;font-weight:600}
+.a-m{fill:var(--muted);font-family:var(--mono);font-size:11px}
+.a-l{stroke:var(--green);stroke-width:2;fill:none;stroke-dasharray:6 6;animation:flow 1.1s linear infinite}
+.a-mod{fill:#fff;stroke:var(--mint2);stroke-width:1.2}
+.a-srv{fill:#fff;stroke:#C9D6D1;stroke-width:1.2}
+.a-dot{fill:var(--green)}
+.a-dot.off{fill:var(--red)}
+.a-dot.y{fill:var(--yellow)}
+@keyframes flow{to{stroke-dashoffset:-24}}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--muted)}
+
+/* state machine */
+.sm{margin-top:32px;background:var(--night);border-radius:22px;padding:clamp(22px,3vw,36px);color:#E8EDF1}
+.sm h3{font-size:16px;font-weight:800;color:#fff;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sm h3 span{font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--nmuted)}
+.flowsm{display:flex;align-items:center;gap:10px;margin-top:22px;flex-wrap:wrap}
+.st{font-family:var(--mono);font-size:13px;font-weight:700;padding:10px 14px;border-radius:10px;background:var(--night3);color:var(--nmuted);border:1px solid var(--nline);transition:all .35s}
+.st.on{background:var(--yellow);border-color:var(--yellow);color:var(--ink);box-shadow:0 0 0 5px rgba(246,195,67,.15)}
+.st.done{border-color:var(--green);color:#7FD1B0}
+.arrow{color:#4A535C;font-weight:800}
+.smlog{margin-top:20px;font-family:var(--mono);font-size:13px;color:var(--nmuted);min-height:22px}
+.smlog b{color:#7FD1B0;font-weight:500}
+.results{margin-top:28px;overflow-x:auto;border:1px solid var(--line);border-radius:18px}
+table{width:100%;border-collapse:collapse;font-size:15.5px;min-width:560px}
+th,td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--soft)}
+tr:last-child td{border-bottom:0}
+tbody tr{transition:background .2s}
+tbody tr:hover{background:var(--soft)}
+.r{display:inline-block;font-family:var(--mono);font-size:12.5px;font-weight:700;padding:3px 9px;border-radius:7px;white-space:nowrap}
+.r.ok{background:var(--mint);color:var(--green-dd)}
+.r.rb{background:var(--blue-soft);color:#1D4ED8}
+.r.bad{background:var(--red-soft);color:#B42318}
+.r.warn{background:var(--yellow-soft);color:#8A5F00}
+.r.skip{background:var(--gray-soft);color:var(--ink2)}
+
+/* deep dives */
+.dives{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:32px}
+@media (max-width:860px){.dives{grid-template-columns:minmax(0,1fr)}}
+.dive{border:1px solid var(--line);border-radius:20px;padding:26px;display:grid;gap:12px;align-content:start;background:#fff;transition:transform .3s,box-shadow .3s,border-color .3s}
+.dive:hover{transform:translateY(-4px);border-color:var(--mint2);box-shadow:0 28px 46px -34px rgba(31,77,64,.5)}
+.dive .ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:var(--green);color:#fff;font-family:var(--mono);font-weight:700;font-size:14px}
+.dive:nth-child(2) .ic{background:var(--yellow);color:var(--ink)}
+.dive:nth-child(3) .ic{background:var(--ink)}
+.dive:nth-child(4) .ic{background:var(--green-dd)}
+.dive:nth-child(5) .ic{background:var(--blue)}
+.dive:nth-child(6) .ic{background:var(--red)}
+.dive h3{font-size:20px;font-weight:800}
+.dive p{font-size:15.5px;color:var(--ink2)}
+.dive .why{margin-top:4px}
+.snip{background:var(--night);color:#D7DEE4;border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto;white-space:pre}
+.snip .c{color:#7C8792}.snip .k{color:#7FD1B0}.snip .s{color:var(--yellow)}
+
+/* trade-offs */
+.tradeoffs td:first-child{font-weight:800}
+.tradeoffs td:nth-child(2)::before{content:"+ ";color:var(--green);font-weight:800}
+.tradeoffs td:nth-child(3)::before{content:"− ";color:var(--red);font-weight:800}
+
+/* result terminal */
+.term{margin-top:32px;background:var(--night);border-radius:20px;overflow:hidden;box-shadow:0 40px 80px -44px rgba(18,21,25,.55)}
+.term-top{display:flex;align-items:center;gap:8px;padding:13px 18px;background:var(--night2);border-bottom:1px solid var(--nline)}
+.term-top i{width:12px;height:12px;border-radius:50%;display:block}
+.term-top i:nth-child(1){background:#FF5F57}.term-top i:nth-child(2){background:#FEBC2E}.term-top i:nth-child(3){background:#28C840}
+.term-top span{margin-left:10px;font-family:var(--mono);font-size:12.5px;color:var(--nmuted)}
+.term pre{margin:0;padding:20px 22px 24px;font-family:var(--mono);font-size:13.5px;line-height:1.75;color:#D7DEE4;overflow-x:auto}
+.term .g{color:#4ADE80}.term .b{color:#93C5FD}.term .rd{color:#FF8A8E}.term .y{color:var(--yellow)}.term .d{color:#7C8792}.term .w{color:#fff;font-weight:700}
+.cap{font-size:13.5px;color:var(--muted);margin-top:10px}
+.outs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:32px}
+@media (max-width:860px){.outs{grid-template-columns:minmax(0,1fr)}}
+.out{border-radius:20px;padding:26px;display:grid;gap:12px;align-content:start}
+.out.a{background:var(--mint)}.out.b{background:var(--soft);border:1px solid var(--line)}
+.out h3{font-size:18px;font-weight:800}
+.out ul{margin:0;padding-left:20px;display:grid;gap:8px;font-size:15.5px;color:var(--ink2)}
+.out ul li::marker{color:var(--green)}
+
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.chips span{font-family:var(--mono);font-size:14px;font-weight:500;padding:9px 14px;border-radius:10px;background:var(--soft);border:1px solid var(--line);transition:all .2s}
+.chips span:hover{background:var(--mint);border-color:var(--mint2);color:var(--green-dd)}
+.next{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:32px}
+@media (max-width:1100px){.next{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.next{grid-template-columns:minmax(0,1fr)}}
+.nx{border:1.5px dashed var(--mint2);border-radius:18px;padding:22px;display:grid;gap:8px;align-content:start}
+.nx b{font-size:17px}
+.nx p{font-size:15px;color:var(--ink2)}
+.note{margin-top:28px;font-size:14.5px;color:var(--muted)}
+
+/* end CTA */
+.cta{background:var(--green);color:#fff;position:relative;overflow:hidden}
+.cta::after{content:"";position:absolute;right:-110px;top:-110px;width:360px;height:360px;border-radius:50%;background:var(--yellow)}
+.cta .wrap{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:28px;flex-wrap:wrap;padding-block:clamp(56px,7vw,96px)}
+.cta h2{font-size:clamp(32px,4vw,56px);font-weight:800;letter-spacing:-.04em;max-width:18ch}
+.cta p{margin-top:12px;font-size:18px;opacity:.92;max-width:52ch}
+.cta .acts{display:flex;gap:12px;flex-wrap:wrap}
+.cta .ghost{background:rgba(255,255,255,.14);color:#fff}
+.cta .ghost:hover{background:rgba(255,255,255,.24)}
+footer{background:var(--ink);color:#9AA5AE}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-block:24px;font-family:var(--mono);font-size:13px}
+footer a{color:#7FD1B0;text-decoration:none}
+.wa{position:fixed;right:max(20px,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom));z-index:80;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:#25D366;box-shadow:0 14px 30px -10px rgba(37,211,102,.7);transition:transform .2s}
+.wa:hover{transform:translateY(-2px) scale(1.04)}
+.wa svg{width:28px;height:28px;fill:#fff}
+
+.rv{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.js .rv:not(.in){transform:translateY(28px)}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.js .rv:not(.in){transform:none}}
+</style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="/"><b>rz</b>Rizwan Zafar</a>
+    <a class="back" href="/#work">← All work</a>
+    <a class="btn btn-green" href="/#contact">Let's talk</a>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Case study · System design &amp; automation</span>
+      <h1>Fleet <span class="mark">Orchestrator</span></h1>
+      <p class="lede">Designing a reliable automation system that runs operations on <b>120+ production servers</b> in parallel, and reports exactly what happened on each one, even when servers go offline partway through.</p>
+      <dl class="meta">
+        <div><dt>Role</dt><dd>Design &amp; implementation</dd></div>
+        <div><dt>Scale</dt><dd>120+ servers · ~20 clusters</dd></div>
+        <div><dt>Stack</dt><dd>Rust · React · SSH</dd></div>
+        <div><dt>Domain</dt><dd>Telecom infrastructure</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="wrap layout">
+    <nav class="toc" aria-label="On this page">
+      <span>On this page</span>
+      <a href="#problem"><i>01</i>Problem</a>
+      <a href="#requirements"><i>02</i>Requirements</a>
+      <a href="#design"><i>03</i>High-level design</a>
+      <a href="#states"><i>04</i>State machine</a>
+      <a href="#deep-dives"><i>05</i>Deep dives</a>
+      <a href="#trade-offs"><i>06</i>Trade-offs</a>
+      <a href="#result"><i>07</i>Result</a>
+      <a href="#stack"><i>08</i>Tech stack</a>
+      <a href="#next"><i>09</i>Next steps</a>
+    </nav>
+
+    <article>
+      <section class="sec" id="problem">
+        <span class="num">01 · Problem</span>
+        <h2>Manual operations don't scale past a handful of servers</h2>
+        <p class="intro read">A telecom platform runs on a fleet of production servers, grouped into clusters for different customers. Each cluster mixes web, telephony and database servers. Every software update, configuration change or reboot meant logging into each server one by one, running the step and checking the result by eye.</p>
+        <p class="intro read">With over a hundred servers, this was slow and easy to get wrong. Worse, when something failed, there was no quick way to tell why. Was the server down? Were the credentials wrong? Did the script crash? Or was the failure expected, as with a reboot?</p>
+        <div class="pains">
+          <div class="pain rv"><h3>Ambiguous failures</h3><p>A server that was down, a rejected login and a crashed script all looked identical. Every failure needed a manual investigation.</p></div>
+          <div class="pain rv"><h3>Reboots looked like failures</h3><p>A reboot drops the connection by design, so successful reboots were reported as broken and had to be checked by hand.</p></div>
+          <div class="pain rv"><h3>Inventory drift</h3><p>The server list drifted from reality. Retired servers stayed in it, and moved servers appeared in two places.</p></div>
+          <div class="pain rv"><h3>No guardrails</h3><p>Anyone with access could run any command as root on every server, and servers under maintenance were not protected.</p></div>
+        </div>
+      </section>
+
+      <section class="sec" id="requirements">
+        <span class="num">02 · Requirements</span>
+        <h2>What the system had to do, and how well</h2>
+        <div class="reqs">
+          <div class="req f rv"><h3>Functional</h3><ul>
+            <li>Run an operation on one server, a cluster, or any selection.</li>
+            <li>Stream live output for every server to the browser.</li>
+            <li>Give every server a specific final result with a reason.</li>
+            <li>Handle reboots as a tracked operation, not a failure.</li>
+            <li>Keep the inventory in sync with a single source of truth.</li>
+            <li>Monitor CPU, memory and disk across the fleet.</li>
+          </ul></div>
+          <div class="req n rv"><h3>Non-functional</h3><ul>
+            <li><span><b>Reliability:</b> one bad server must never block or hide the others.</span></li>
+            <li><span><b>Bounded load:</b> limit how many servers are worked on at once.</span></li>
+            <li><span><b>Resilience:</b> a job keeps running if the operator closes the browser.</span></li>
+            <li><span><b>Security:</b> role-based access and a full audit trail.</span></li>
+            <li><span><b>Safety:</b> a bad input must never wipe the inventory.</span></li>
+          </ul></div>
+        </div>
+      </section>
+
+      <section class="sec" id="design">
+        <span class="num">03 · High-level design</span>
+        <h2>One orchestration service between operators and the fleet</h2>
+        <p class="intro read">No agent is installed on the servers. A single backend service connects over SSH, which every server already supports. That keeps the fleet untouched and puts all the logic in one place.</p>
+        <div class="arch rv" role="img" aria-label="Architecture: operator dashboard connects over REST and WebSocket to an orchestration service, which connects over parallel SSH to the server fleet.">
+          <svg viewBox="0 0 1000 380" xmlns="http://www.w3.org/2000/svg">
+            <!-- dashboard -->
+            <rect class="a-box" x="10" y="80" width="220" height="220" rx="16"/>
+            <text class="a-h" x="30" y="114">Operator dashboard</text>
+            <text class="a-m" x="30" y="134">React · Vite · xterm.js</text>
+            <rect class="a-mod" x="30" y="152" width="180" height="34" rx="8"/><text class="a-t" x="44" y="174">Org → cluster → server</text>
+            <rect class="a-mod" x="30" y="194" width="180" height="34" rx="8"/><text class="a-t" x="44" y="216">Live per-server job panel</text>
+            <rect class="a-mod" x="30" y="236" width="180" height="34" rx="8"/><text class="a-t" x="44" y="258">Browser terminal</text>
+            <!-- link 1 -->
+            <path class="a-l" d="M232,190 H318"/>
+            <text class="a-m" x="246" y="178">REST +</text><text class="a-m" x="246" y="210">WebSocket</text>
+            <!-- core -->
+            <rect class="a-core" x="320" y="20" width="360" height="340" rx="18"/>
+            <text class="a-h" x="342" y="54">Orchestration service</text>
+            <text class="a-m" x="342" y="74">Rust · Axum · Tokio</text>
+            <rect class="a-mod" x="342" y="90" width="152" height="40" rx="9"/><text class="a-t" x="356" y="115">Auth &amp; role checks</text>
+            <rect class="a-mod" x="506" y="90" width="152" height="40" rx="9"/><text class="a-t" x="520" y="115">Job engine (max 20)</text>
+            <rect class="a-mod" x="342" y="140" width="152" height="40" rx="9"/><text class="a-t" x="356" y="165">Failure classifier</text>
+            <rect class="a-mod" x="506" y="140" width="152" height="40" rx="9"/><text class="a-t" x="520" y="165">Reboot tracker</text>
+            <rect class="a-mod" x="342" y="190" width="152" height="40" rx="9"/><text class="a-t" x="356" y="215">Health monitor · 60s</text>
+            <rect class="a-mod" x="506" y="190" width="152" height="40" rx="9"/><text class="a-t" x="520" y="215">Inventory reconciler</text>
+            <rect class="a-mod" x="342" y="240" width="316" height="40" rx="9"/><text class="a-t" x="356" y="265">Encrypted state (SQLite · AES-GCM) + audit log</text>
+            <text class="a-m" x="342" y="312">No agents · single binary</text>
+            <text class="a-m" x="342" y="330">JWT auth · role-based access</text>
+            <!-- link 2 -->
+            <path class="a-l" d="M682,120 C730,120 730,80 770,80"/>
+            <path class="a-l" d="M682,190 H770"/>
+            <path class="a-l" d="M682,260 C730,260 730,300 770,300"/>
+            <text class="a-m" x="700" y="178">SSH</text><text class="a-m" x="692" y="210">parallel</text>
+            <!-- fleet -->
+            <rect class="a-box" x="772" y="20" width="218" height="340" rx="16"/>
+            <text class="a-h" x="792" y="54">Server fleet</text>
+            <text class="a-m" x="792" y="74">120+ servers · ~20 clusters</text>
+            <g>
+              <rect class="a-srv" x="792" y="92" width="178" height="34" rx="8"/><circle class="a-dot" cx="808" cy="109" r="5"/><text class="a-t" x="822" y="114">web-01 · cluster A</text>
+              <rect class="a-srv" x="792" y="134" width="178" height="34" rx="8"/><circle class="a-dot" cx="808" cy="151" r="5"/><text class="a-t" x="822" y="156">sip-02 · cluster A</text>
+              <rect class="a-srv" x="792" y="176" width="178" height="34" rx="8"/><circle class="a-dot y" cx="808" cy="193" r="5"/><text class="a-t" x="822" y="198">db-01 · rebooting</text>
+              <rect class="a-srv" x="792" y="218" width="178" height="34" rx="8"/><circle class="a-dot off" cx="808" cy="235" r="5"/><text class="a-t" x="822" y="240">web-07 · unreachable</text>
+              <rect class="a-srv" x="792" y="260" width="178" height="34" rx="8"/><circle class="a-dot" cx="808" cy="277" r="5"/><text class="a-t" x="822" y="282">sip-11 · cluster C</text>
+              <text class="a-m" x="792" y="326">web · telephony · database</text>
+              <text class="a-m" x="792" y="344">no agent required</text>
+            </g>
+          </svg>
+        </div>
+        <div class="legend"><span>● green: healthy</span><span style="color:#9A6B00">● yellow: in a tracked reboot</span><span style="color:var(--red)">● red: unreachable</span></div>
+      </section>
+
+      <section class="sec" id="states">
+        <span class="num">04 · Core idea</span>
+        <h2>A state machine per server, ending in one clear result</h2>
+        <p class="intro read">Instead of reading an exit code as pass or fail, every server in a job is tracked through explicit states. The dashboard and the final report both read from these states.</p>
+        <div class="sm rv">
+          <h3>Reboot flow <span>live demo · one server</span></h3>
+          <div class="flowsm" id="smflow">
+            <span class="st done">QUEUED</span><span class="arrow">→</span>
+            <span class="st done">CONNECTING</span><span class="arrow">→</span>
+            <span class="st on">REBOOT_SENT</span><span class="arrow">→</span>
+            <span class="st">REBOOTING</span><span class="arrow">→</span>
+            <span class="st">REBOOTED</span>
+          </div>
+          <p class="smlog" id="smlog" aria-live="polite">[10.0.4.11] Boot ID recorded: <b>3f2a…c91e</b>. Reboot sent in the background.</p>
+        </div>
+        <div class="results rv">
+          <table>
+            <thead><tr><th>Result</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><span class="r ok">SUCCESS</span></td><td>The operation finished correctly.</td></tr>
+              <tr><td><span class="r rb">REBOOTED</span></td><td>The server restarted and is back online, with downtime measured.</td></tr>
+              <tr><td><span class="r bad">UNREACHABLE</span></td><td>Timed out, connection refused or no network route.</td></tr>
+              <tr><td><span class="r bad">AUTH_FAILED</span></td><td>The login was rejected.</td></tr>
+              <tr><td><span class="r warn">CONNECTION_LOST</span></td><td>The connection dropped while the operation was running.</td></tr>
+              <tr><td><span class="r bad">FAILED</span></td><td>The operation ran but returned an error code.</td></tr>
+              <tr><td><span class="r warn">REBOOT_TIMEOUT</span></td><td>The server went down and didn't come back in time.</td></tr>
+              <tr><td><span class="r skip">SKIPPED</span></td><td>Under maintenance, or not in the inventory.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="sec" id="deep-dives">
+        <span class="num">05 · Deep dives</span>
+        <h2>The decisions that made it reliable</h2>
+        <div class="dives">
+          <div class="dive rv"><span class="ic">255</span><h3>Failure classification</h3>
+            <p>The SSH client returns the same exit code for almost every network problem, so the code alone can't explain a failure. The service reads the error output and matches known patterns: timeouts, refused connections, rejected logins, dropped sessions. Each failure becomes a specific result with a short reason in plain language.</p>
+            <div class="snip"><span class="c">// simplified</span>
+<span class="k">match</span> stderr {
+  s <span class="k">if</span> s.contains(<span class="s">"timed out"</span>)          =&gt; Unreachable(<span class="s">"connection timed out"</span>),
+  s <span class="k">if</span> s.contains(<span class="s">"Connection refused"</span>) =&gt; Unreachable(<span class="s">"port refused"</span>),
+  s <span class="k">if</span> s.contains(<span class="s">"Permission denied"</span>)  =&gt; AuthFailed(<span class="s">"login rejected"</span>),
+  _                                       =&gt; Failed(exit_code),
+}</div>
+            <p class="why"><b>Why:</b> operators act on the reason, not the code. "Port refused" and "wrong password" need completely different fixes.</p></div>
+
+          <div class="dive rv"><span class="ic">id</span><h3>Verified reboots</h3>
+            <p>Before a reboot, the service records the server's boot ID, which the kernel generates fresh on every start. It sends the reboot in the background, waits for the server to go down, then polls until it answers with a <b>new</b> ID. Unreachable servers are never sent a reboot. Servers that don't return within 10 minutes are flagged.</p>
+            <div class="snip"><span class="c"># before and after</span>
+$ cat /proc/sys/kernel/random/boot_id
+<span class="s">3f2a8d1e-…-c91e</span>   <span class="c"># recorded</span>
+<span class="c"># … server goes down, comes back …</span>
+<span class="s">a7b04c22-…-15d0</span>   <span class="c"># changed → REBOOTED</span></div>
+            <p class="why"><b>Why:</b> "it answers again" isn't proof it restarted. A changed boot ID is proof, and it also catches a reboot that was accepted but never happened.</p></div>
+
+          <div class="dive rv"><span class="ic">20</span><h3>Bounded concurrency</h3>
+            <p>Each server runs as its own async task, but a semaphore keeps at most 20 operations in flight. Health checks have a separate limit. One slow or failing server never blocks the others, and the service never opens hundreds of connections at once.</p>
+            <p class="why"><b>Why:</b> fleet-wide operations need to be fast without overloading the service or the network.</p></div>
+
+          <div class="dive rv"><span class="ic">ws</span><h3>Jobs that outlive the browser</h3>
+            <p>Output from every server in a job flows into one stream. The stream is saved to the job log and sent to every connected viewer. Closing the tab doesn't stop a job, and reopening it shows the full history so far. Every finished job is written to an audit log.</p>
+            <p class="why"><b>Why:</b> a reboot across a cluster can take minutes, and a network drop on the operator's side shouldn't affect it.</p></div>
+
+          <div class="dive rv"><span class="ic">⇄</span><h3>Inventory reconciliation</h3>
+            <p>The inventory syncs from a single source of truth. Each sync adds new servers, reassigns moved ones, removes retired ones, and rejects invalid or duplicate entries with a reason. Every sync returns a change report.</p>
+            <p class="why"><b>Why:</b> automation is only as good as its target list. A safeguard stops a sync from deleting anything when the source comes back empty or unreadable.</p></div>
+
+          <div class="dive rv"><span class="ic">rbac</span><h3>Guardrails</h3>
+            <p>Operators can run approved operations and tracked reboots. Only admins can run arbitrary commands or open a terminal. Clusters in maintenance are skipped automatically. Credentials are encrypted at rest and never exposed in the process list.</p>
+            <p class="why"><b>Why:</b> a tool that can reboot a whole fleet in one click needs limits that don't rely on people being careful.</p></div>
+        </div>
+      </section>
+
+      <section class="sec" id="trade-offs">
+        <span class="num">06 · Trade-offs</span>
+        <h2>What I chose, and what it cost</h2>
+        <div class="results rv">
+          <table class="tradeoffs">
+            <thead><tr><th>Decision</th><th>Gained</th><th>Gave up</th></tr></thead>
+            <tbody>
+              <tr><td>Agentless (SSH)</td><td>Nothing to install or maintain on servers</td><td>Must poll for health instead of receiving pushed updates</td></tr>
+              <tr><td>Single service</td><td>Simple to deploy and reason about</td><td>Not horizontally scalable yet</td></tr>
+              <tr><td>Classify from output</td><td>Specific, readable failure reasons</td><td>Depends on known error messages</td></tr>
+              <tr><td>Concurrency limit of 20</td><td>Predictable load</td><td>Very large jobs take longer</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="sec" id="result">
+        <span class="num">07 · Result</span>
+        <h2>What an operator sees after a job</h2>
+        <div class="term rv">
+          <div class="term-top"><i></i><i></i><i></i><span>fleet-orchestrator · job #4812 · reboot cluster-a</span></div>
+<pre><span class="w">REBOOTING 6 target(s)</span> <span class="d">[5 runnable, 1 skipped] - max 20 in parallel</span>
+<span class="b">[10.0.4.11]</span> Reachable. Boot ID recorded.
+<span class="b">[10.0.4.11]</span> Server went down (expected). Waiting for it to come back...
+<span class="b">[10.0.4.11]</span> <span class="g">Back online with a new boot ID.</span>
+
+<span class="d">================ SUMMARY ================</span>
+<span class="b">REBOOTED (3):</span>
+   10.0.4.11 - back online after <span class="y">30s</span> of downtime
+   10.0.4.12 - back online after <span class="y">41s</span> of downtime
+   10.0.4.13 - back online after <span class="y">38s</span> of downtime
+<span class="rd">UNREACHABLE (1):</span>
+   10.0.4.14 - connection timed out (server down or firewalled)
+<span class="rd">AUTH_FAILED (1):</span>
+   10.0.4.15 - login rejected
+<span class="d">SKIPPED (1):</span>
+   10.0.4.16 - cluster is in maintenance mode
+<span class="w">Total: <span class="g">3 ok</span> / <span class="rd">3 not ok</span></span></pre>
+        </div>
+        <p class="cap">Example output with anonymized addresses.</p>
+        <div class="outs">
+          <div class="out a rv"><h3>Outcomes</h3><ul>
+            <li>Fleet-wide operations run from one screen instead of server by server.</li>
+            <li>Successful reboots are verified and show their downtime.</li>
+            <li>Every failure states its cause, so no log digging is needed.</li>
+            <li>The inventory stays accurate automatically.</li>
+            <li>Risky actions are limited by role and by maintenance mode.</li>
+          </ul></div>
+          <div class="out b rv"><h3>How it was validated</h3><ul>
+            <li>Disposable containers reproduced each failure type: refused, timed out, rejected login, and a connection killed mid-operation.</li>
+            <li>A simulated restart tested the full reboot lifecycle end to end.</li>
+            <li>Unit tests cover inventory reconciliation, including the empty-source safeguard.</li>
+          </ul></div>
+        </div>
+      </section>
+
+      <section class="sec" id="stack">
+        <span class="num">08 · Tech stack</span>
+        <h2>Built with</h2>
+        <div class="chips"><span>Rust</span><span>Axum</span><span>Tokio (async)</span><span>WebSockets</span><span>SQLite</span><span>AES-GCM</span><span>JWT auth</span><span>SSH</span><span>React</span><span>Vite</span><span>xterm.js</span><span>Docker (testing)</span></div>
+      </section>
+
+      <section class="sec" id="next" style="padding-bottom:0">
+        <span class="num">09 · Next steps</span>
+        <h2>Where the design goes next</h2>
+        <div class="next">
+          <div class="nx rv"><b>Rolling deploys</b><p>Update one server, verify its health, then continue to the rest of the cluster automatically.</p></div>
+          <div class="nx rv"><b>Durable jobs</b><p>Save job state so in-progress work survives a service restart.</p></div>
+          <div class="nx rv"><b>Key-based access</b><p>Replace passwords with SSH keys and verify host keys properly.</p></div>
+          <div class="nx rv"><b>Horizontal scale</b><p>Move jobs onto a queue so several workers can share the load.</p></div>
+        </div>
+        <p class="note">Built for a telecom infrastructure team. Customer details, addresses and credentials are left out of this case study.</p>
+      </section>
+    </article>
+  </div>
+
+  <section class="cta">
+    <div class="wrap">
+      <div><h2>Need something like this for your fleet?</h2><p>I design and build infrastructure tooling that tells you exactly what happened, not just pass or fail.</p></div>
+      <div class="acts"><a class="btn btn-yellow" href="/#contact">Get in touch</a><a class="btn ghost" href="/#work">More work</a></div>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><span>© 2026 Rizwan Zafar</span><a href="/">← rizwan441.github.io</a></div></footer>
+<a class="wa" href="https://wa.me/923209323343?text=Hi%20Rizwan%2C%20I%20read%20your%20Fleet%20Orchestrator%20case%20study." target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.8-2.2 1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.7-.1 1.2z"/></svg></a>
+
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var prog=document.querySelector('.progress');
+  var links=[].slice.call(document.querySelectorAll('.toc a')),secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  function onScroll(){
+    var h=document.documentElement.scrollHeight-innerHeight;prog.style.setProperty('--p',h>0?scrollY/h:0);
+    var cur=0;secs.forEach(function(s,i){if(s.getBoundingClientRect().top<innerHeight*.35)cur=i});
+    links.forEach(function(a,i){a.classList.toggle('on',i===cur)});
+  }
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+  var rv=document.querySelectorAll('.rv');
+  if('IntersectionObserver' in window&&!reduce){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -6% 0px'});rv.forEach(function(el){io.observe(el)})}else rv.forEach(function(el){el.classList.add('in')});
+
+  /* state machine demo */
+  var st=[].slice.call(document.querySelectorAll('#smflow .st')),log=document.getElementById('smlog');
+  var msgs=[
+    '[10.0.4.11] Queued. Waiting for a free slot (19 of 20 in use).',
+    '[10.0.4.11] Connecting over SSH… reachable.',
+    '[10.0.4.11] Boot ID recorded: <b>3f2a…c91e</b>. Reboot sent in the background.',
+    '[10.0.4.11] Server went down (expected). Polling every 5s…',
+    '[10.0.4.11] Back online. New boot ID <b>a7b0…15d0</b>. Downtime <b>30s</b>. Result: <b>REBOOTED</b>'
+  ],k=2;
+  function paint(){st.forEach(function(s,i){s.className='st'+(i<k?' done':(i===k?' on':''))});log.innerHTML=msgs[k]}
+  if(!reduce)setInterval(function(){k=(k+1)%st.length;paint()},1900);
+})();
+</script>
+</body>
+</html>
